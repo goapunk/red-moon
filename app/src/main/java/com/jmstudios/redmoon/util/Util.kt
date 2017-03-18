@@ -130,8 +130,8 @@ fun handleUpgrades() {
         } in 0..25 -> {
             upgradeToggleModePreferences()
             upgradeFrom(26)
-        } 26 -> {
-            upgradeFrom(27)
+        } 26..27 -> {
+            upgradeFrom(28)
         } else -> {
             Log.e("handleUpgrades", "Didn't catch upgrades from version $version")
             upgradeFrom(version+1)
