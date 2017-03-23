@@ -26,9 +26,6 @@ import com.jmstudios.redmoon.util.Logger
 import com.jmstudios.redmoon.util.appContext
 import com.jmstudios.redmoon.util.getString
 
-private const val PREFERENCE_NAME = "com.jmstudios.redmoon.PROFILES_PREFERENCE"
-private const val MODE = Context.MODE_PRIVATE
-
 /**
  * This singleton manages the SharedPreference that store all custom
  * filter profiles added by the user.
@@ -39,6 +36,9 @@ private const val MODE = Context.MODE_PRIVATE
  */
 
 object ProfilesModel: Logger() {
+
+    private const val PREFERENCE_NAME = "com.jmstudios.redmoon.PROFILES_PREFERENCE"
+    private const val MODE = Context.MODE_PRIVATE
 
     private val prefs
         get() = appContext.getSharedPreferences(PREFERENCE_NAME, MODE)
@@ -97,5 +97,14 @@ object ProfilesModel: Logger() {
         custom = profile
         updateSharedPreferences()
         return mProfiles.size
+    }
+
+    // de-dupe, then append defaults
+    fun reset(): Int = mProfiles.run {
+        remove(custom)
+        removeAll(defaultProfiles)
+        addAll(0, defaultProfiles)
+        updateSharedPreferences()
+        size
     }
 }

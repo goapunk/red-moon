@@ -47,6 +47,7 @@ import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.fragment.FilterFragment
 import com.jmstudios.redmoon.model.Config
+import com.jmstudios.redmoon.model.ProfilesModel
 import com.jmstudios.redmoon.service.ScreenFilterService
 import com.jmstudios.redmoon.util.Logger
 import com.jmstudios.redmoon.util.handleUpgrades
@@ -137,6 +138,10 @@ class MainActivity : ThemedAppCompatActivity() {
             R.id.menu_dark_theme -> {
                 Config.darkThemeFlag = !Config.darkThemeFlag
                 recreate()
+            }
+            R.id.menu_restore_filters -> {
+                Config.amountProfiles = ProfilesModel.reset()
+                Config.profile = 1
             }
             else -> return super.onOptionsItemSelected(item)
         }
