@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release version="2.10.2" versioncode="28" >
+        <change>Add changelog</change>
+        <change>Remove location preference</change>
+        <change>When enabled, update location automatically</change>
+        <change>More accurate and prominent location update messages</change>
+        <change>Use GPS if network location provider is disabled</change>
+        <change>Move dark theme preference to three dot menu</change>
+        <change>Fix a bug where changes to 'Pause in secure apps' did not apply until Red Moon was killed</change>
+        <change>Small performance improvements</change>
+    </release>
+    <release version="2.10.1" versioncode="27" >
+        <change>Allow choosing how hardware buttons are dimmed</change>
+        <change>Update notification icon</change>
+        <change>Show in notification when Red Moon is paused in a secure app</change>
+        <change>Fix a bug where the filter wouldn't automatically turn on/off (#126)</change>
+        <change>Target Android 7.1</change>
+        <change>Small performance improvements</change>
+        <change>Improve logging</change>
+        <change>Update translations</change>
+    </release>
+    <release version="2.10.0" versioncode="26" >
+        <change>Add timer subscreen</change>
+        <change>Refer to "Red Moon" instead of "The filter"</change>
+        <change>Remove the floating button</change>
+        <change>Top switch toggles Red Moon</change>
+        <change>Add about page</change>
+        <change>Use GPS on devices without a network location provider</change>
+        <change>Don't stop searching for location when the app is closed</change>
+        <change>Update notification and widget phrasing/icons</change>
+        <change>Add new version of package installer to secure apps</change>
+        <change>Notify other apps when Red Moon toggles (details on the about page).</change>
+        <change>Merged: Italian translation (matteocoder)</change>
+        <change>Updated translations</change>
+        <change>Converted code from Java to Kotlin</change>
+        <change>Lots of code cleanup and small bugfixes</change>
+    </release>
+</changelog>

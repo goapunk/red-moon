@@ -37,6 +37,7 @@
 package com.jmstudios.redmoon.fragment
 
 import android.os.Bundle
+import android.preference.ListPreference
 import android.preference.Preference
 import android.preference.SwitchPreference
 
@@ -49,14 +50,15 @@ import com.jmstudios.redmoon.preference.DimSeekBarPreference
 import com.jmstudios.redmoon.preference.IntensitySeekBarPreference
 import com.jmstudios.redmoon.preference.ProfileSelectorPreference
 import com.jmstudios.redmoon.util.hasWriteSettingsPermission
-import com.jmstudios.redmoon.util.Log
 import com.jmstudios.redmoon.util.requestWriteSettingsPermission
+import com.jmstudios.redmoon.util.Logger
 
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class FilterFragment : EventPreferenceFragment() {
     //private var hasShownWarningToast = false
+    companion object : Logger()
 
     // Preferences
     private val profileSelectorPref: ProfileSelectorPreference
@@ -89,6 +91,10 @@ class FilterFragment : EventPreferenceFragment() {
         get() = (preferenceScreen.findPreference
                 (getString(R.string.pref_key_dark_theme)) as SwitchPreference)
 
+    private val buttonBacklightPref: ListPreference
+        get() = (preferenceScreen.findPreference
+                (getString(R.string.pref_key_button_backlight)) as ListPreference)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.filter_preferences)
@@ -96,26 +102,17 @@ class FilterFragment : EventPreferenceFragment() {
         if (!hasWriteSettingsPermission) { lowerBrightnessPref.isChecked = false }
         updateSecureSuspendSummary()
         updateTimeToggleSummary()
+        updateBacklightPrefSummary()
 
         lowerBrightnessPref.onPreferenceChangeListener =
                 Preference.OnPreferenceChangeListener { _, newValue ->
                     val checked = newValue as Boolean
                     if (checked) { requestWriteSettingsPermission(activity) } else { true }
                 }
-
-        /* Normally we'd change theme via an event after the setting gets
-         * changed, but for some reason doing it that way makes the activity
-         * scroll to the top when it gets recreated, which is rather jarring.
-         * Doing it this way keeps the same scroll position, which is nice. */
-        darkThemePref.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _, _ ->
-                    activity.recreate()
-                    true
-                }
     }
 
     override fun onResume() {
-        Log("onResume")
+        Log.i("onResume")
         super.onResume()
         EventBus.getDefault().register(profileSelectorPref)
         updateSecureSuspendSummary()
@@ -137,15 +134,28 @@ class FilterFragment : EventPreferenceFragment() {
                                      else R.string.text_switch_off)
     }
 
+    private fun updateBacklightPrefSummary() {
+        buttonBacklightPref.setSummary(when(Config.buttonBacklightFlag) {
+            "system" -> R.string.pref_button_backlight_entries_array_0
+            "dim"    -> R.string.pref_button_backlight_entries_array_1
+            else     -> R.string.pref_button_backlight_entries_array_2
+        })
+    }
+
     //region presenter
     @Subscribe
     fun onProfileChanged(event: profileChanged) {
-        Log("Profile changed. profile: ${Config.profile}, color: ${Config.color}, intensity: " +
+        Log.i("Profile changed. profile: ${Config.profile}, color: ${Config.color}, intensity: " +
             "${Config.intensity}, dim: ${Config.dim}, lowerBrightness: ${Config.lowerBrightness}")
         colorPref.setProgress(Config.color)
         intensityPref.setProgress(Config.intensity)
         dimPref.setProgress(Config.dim)
         lowerBrightnessPref.isChecked = Config.lowerBrightness
+    }
+
+    @Subscribe
+    fun onButtonBacklightChanged(event: buttonBacklightChanged) {
+        updateBacklightPrefSummary()
     }
     //endregion
 }

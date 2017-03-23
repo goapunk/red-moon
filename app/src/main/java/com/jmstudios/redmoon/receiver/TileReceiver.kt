@@ -17,13 +17,42 @@
 
 package com.jmstudios.redmoon.receiver
 
+import android.annotation.TargetApi
+import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
+import com.jmstudios.redmoon.event.filterIsOnChanged
+import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.service.ScreenFilterService
 
-class TileReciever : TileService() {
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+
+@TargetApi(24)
+class TileReceiver : TileService() {
+
+    override fun onStartListening() {
+        EventBus.getDefault().register(this)
+        updateState()
+    }
+
     override fun onClick() {
         super.onClick()
         ScreenFilterService.toggle()
+    }
+
+    override fun onStopListening() {
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onFilterIsOnChanged(event: filterIsOnChanged) {
+        updateState()
+    }
+
+    private fun updateState() {
+        qsTile.state = if (Config.filterIsOn) { Tile.STATE_ACTIVE }
+                       else { Tile.STATE_INACTIVE }
+        qsTile.updateTile()
     }
 }

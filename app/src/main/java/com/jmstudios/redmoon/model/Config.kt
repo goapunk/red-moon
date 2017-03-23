@@ -40,7 +40,6 @@ import android.preference.PreferenceManager
 
 import com.jmstudios.redmoon.R
 
-import com.jmstudios.redmoon.fragment.TimeToggleFragment
 import com.jmstudios.redmoon.preference.ColorSeekBarPreference
 import com.jmstudios.redmoon.preference.DimSeekBarPreference
 import com.jmstudios.redmoon.preference.IntensitySeekBarPreference
@@ -66,6 +65,14 @@ object Config {
 
     private fun putIntPref(resId: Int, v: Int) {
         sharedPrefs.edit().putInt(appContext.getString(resId), v).apply()
+    }
+
+    private fun getLongPref(resId: Int, default: Long): Long {
+        return sharedPrefs.getLong(appContext.getString(resId), default)
+    }
+
+    private fun putLongPref(resId: Int, v: Long) {
+        sharedPrefs.edit().putLong(appContext.getString(resId), v).apply()
     }
 
     private fun getStringPref(resId: Int, default: String): String {
@@ -108,14 +115,16 @@ object Config {
     val secureSuspend: Boolean
         get() = getBooleanPref(R.string.pref_key_secure_suspend, false)
 
-    val dimButtons: Boolean
-        get() = getBooleanPref(R.string.pref_key_dim_buttons, true)
+    val buttonBacklightFlag: String
+        get() = getStringPref(R.string.pref_key_button_backlight, "off")
     
-    private val darkThemeFlag: Boolean
-        get() = getBooleanPref(R.string.pref_key_dark_theme, false)
+    var darkThemeFlag: Boolean
+        get()     = getBooleanPref(R.string.pref_key_dark_theme, false)
+        set(flag) = putBooleanPref(R.string.pref_key_dark_theme, flag)
 
-    val timeToggle: Boolean
+    var timeToggle: Boolean
         get() = getBooleanPref(R.string.pref_key_time_toggle, false)
+        set(t) = putBooleanPref(R.string.pref_key_time_toggle, t)
 
     val customTurnOnTime: String
         get() = getStringPref(R.string.pref_key_custom_turn_on_time, "22:00")
@@ -123,8 +132,9 @@ object Config {
     val customTurnOffTime: String
         get() = getStringPref(R.string.pref_key_custom_turn_off_time, "06:00")
 
-    val useLocation: Boolean
+    var useLocation: Boolean
         get() = getBooleanPref(R.string.pref_key_use_location, false)
+        set(t) = putBooleanPref(R.string.pref_key_use_location, t)
 
     var sunsetTime: String
         get()  = getStringPref(R.string.pref_key_sunset_time, "19:30")
@@ -139,15 +149,34 @@ object Config {
     val activeTheme: Int
         get() = if (darkThemeFlag) { R.style.AppThemeDark } else { R.style.AppTheme }
 
+    val buttonBacklightLevel: Float
+        get() = when (buttonBacklightFlag) {
+                    "system" -> -1.toFloat()
+                    "dim" -> 1 - (dim.toFloat() / 100)
+                    else -> 0.toFloat()
+                }
+
     val automaticTurnOnTime: String
         get() = if (useLocation) sunsetTime else customTurnOnTime
 
     val automaticTurnOffTime: String
         get() = if (useLocation) sunriseTime else customTurnOffTime
     
-    var location: String
-        get()  = getStringPref(R.string.pref_key_location, TimeToggleFragment.DEFAULT_LOCATION)
-        set(l) = putStringPref(R.string.pref_key_location, l)
+    const val DEFAULT_LOCATION = "0,0"
+    const val NOT_SET: Long = -1
+    var location: Triple<String, String, Long?>
+        get() {
+            val l = getStringPref(R.string.pref_key_location, DEFAULT_LOCATION)
+            val latitude  = l.substringBefore(',')
+            val longitude = l.substringAfter(',')
+            val t = getLongPref(R.string.pref_key_location_timestamp, NOT_SET)
+            val timestamp = if (t == NOT_SET) null else t
+            return Triple(latitude, longitude, timestamp)
+        }
+        set(l) {
+            putLongPref(R.string.pref_key_location_timestamp, l.third ?: NOT_SET)
+            putStringPref(R.string.pref_key_location, l.first + "," + l.second)
+        }
 
     var introShown: Boolean
         get()  = getBooleanPref(R.string.pref_key_intro_shown, false)
@@ -160,5 +189,11 @@ object Config {
     var automaticBrightness: Boolean
         get()  = getBooleanPref(R.string.pref_key_automatic_brightness, true)
         set(a) = putBooleanPref(R.string.pref_key_automatic_brightness, a)
+    //endregion
+
+    //region application
+    var fromVersionCode: Int
+        get() = getIntPref(R.string.pref_key_from_version_code, 0)
+        set(c) = putIntPref(R.string.pref_key_from_version_code, c)
     //endregion
 }

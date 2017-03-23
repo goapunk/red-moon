@@ -49,12 +49,12 @@ import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 class SwitchAppWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        Log("Updating!")
+        Log.i("Updating!")
 
         for (i in appWidgetIds.indices) {
             val appWidgetId = appWidgetIds[i]
@@ -82,7 +82,7 @@ class SwitchAppWidgetProvider : AppWidgetProvider() {
     }
 
     internal fun updateImage(context: Context, filterIsOn: Boolean) {
-        Log("Updating image!")
+        Log.i("Updating image!")
         val views = RemoteViews(context.packageName, R.layout.appwidget_switch)
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val appWidgetComponent = ComponentName(context, SwitchAppWidgetProvider::class.java.name)
@@ -93,7 +93,7 @@ class SwitchAppWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetComponent, views)
     }
 
-    companion object {
+    companion object : Logger() {
         const val ACTION_TOGGLE = "com.jmstudios.redmoon.action.APPWIDGET_TOGGLE"
         const val ACTION_UPDATE = "com.jmstudios.redmoon.action.APPWIDGET_UPDATE"
         const val EXTRA_POWER = "com.jmstudios.redmoon.action.APPWIDGET_EXTRA_POWER"

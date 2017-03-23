@@ -37,11 +37,12 @@ class locationChanged          : Event()
 class sunsetTimeChanged        : Event()
 class sunriseTimeChanged       : Event()
 class secureSuspendChanged     : Event()
+class buttonBacklightChanged   : Event()
 
 class overlayPermissionDenied  : Event()
-class locationServicesDisabled : Event()
 class locationAccessDenied     : Event()
-class locationUpdating         : Event()
 class changeBrightnessDenied   : Event()
-
 class locationPermissionDialogClosed : Event()
+
+data class mainUI(val isOpen: Boolean) : Event()
+data class locationService(val isSearching: Boolean, val isRunning: Boolean = true) : Event()

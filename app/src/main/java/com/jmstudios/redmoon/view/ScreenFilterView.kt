@@ -201,18 +201,18 @@ class ScreenFilterView(context: Context) : View(context) {
     }
 
     companion object {
-        val MIN_DIM = 0
-        val MIN_INTENSITY = 0
+        const val MIN_DIM = 0
+        const val MIN_INTENSITY = 0
         // private val MAX_DIM = 100f
         // private val MIN_ALPHA = 0x00f
         // private val MAX_ALPHA = 0.75f
         // private val MAX_DARKEN = 0.75f
 
-        val DIM_MAX_ALPHA = 0.9f
+        const val DIM_MAX_ALPHA = 0.9f
         private val INTENSITY_MAX_ALPHA = 0.75f
         private val ALPHA_ADD_MULTIPLIER = 0.75f
 
-        val FADE_DURATION_MS = 1000
+        const val FADE_DURATION_MS = 1000
 
         fun rgbFromColorProgress(colorTempProgress: Int): Int {
             val colorTemperature = getColorTempFromProgress(colorTempProgress)

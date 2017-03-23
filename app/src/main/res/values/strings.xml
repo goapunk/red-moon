@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
  * Copyright (c) 2016  Marien Raat <marienraat@riseup.net>
  * Copyright (c) 2017  Stephen Michel <s@smichel.me>
@@ -35,14 +35,15 @@
  *     NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
  *     CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- App Name and Activity Labels -->
     <string name="app_name">Red Moon</string>
     <string name="settings">Red Moon</string>
     <string name="shortcut_activity">Red Moon Toggle</string>
     <string name="intro_label">Intro</string>
-    <string name="show_intro_text">Show intro</string>
+    <string name="show_intro_text">Replay intro</string>
+    <string name="menu_about">About</string>
+    <string name="activity_about">About Red Moon</string>
     <string name="secure_suspend_activity">Pause in secure apps</string>
 
     <!-- Overlay popup -->
@@ -64,14 +65,16 @@
     <string name="pause_action">Pause</string>
     <string name="action_on">Turn on</string>
     <string name="action_off">Turn off</string>
-    <string name="action_next_profile">Next profile</string>
+    <string name="action_next_filter">Next filter</string>
 
     <!-- Preference -->
-    <string name="pref_title_appearance">Profile</string>
+    <string name="pref_title_filter">Filter</string>
     <string name="time_toggle_activity">Timer</string>
     <string name="pref_title_time_toggle">Timer</string>
     <string name="pref_title_startup">Startup</string>
     <string name="pref_title_other">Other</string>
+    <string name="pref_title_button_backlight_disclaimer">No effect on some devices</string>
+    <string name="pref_title_button_backlight">Hardware button backlight</string>
 
     <string name="button_add_profile">Add</string>
     <string name="button_remove_profile">Delete</string>
@@ -83,12 +86,12 @@
     <string name="time_toggle_title">Automatic toggle</string>
     <string name="custom_start_time_title">Turn on at</string>
     <string name="custom_end_time_title">Turn off at</string>
-    <string name="use_location_title">Times from location</string>
+    <string name="pref_title_use_location">Times from sun</string>
+    <string name="pref_summaryoff_use_location">Based on your location</string>
     <string name="location_title">Location</string>
-    <string name="location_not_set">Not set</string>
+    <string name="location_not_set">Location not set</string>
     <string name="latitude_short">Lat</string>
     <string name="longitude_short">Long</string>
-    <string name="searching_location">Searching for location</string>
 
     <string name="secure_suspend_title">Pause in secure apps</string>
     <!-- Secure suspend subscreen -->
@@ -100,24 +103,28 @@
 
     <string name="dark_theme">Dark theme</string>
 
+    <!-- About subscreen -->
     <string name="email_me_title">Email me at marienraat@riseup.net</string>
     <string name="email_me_summary">Email me with bugs or suggestions</string>
-    <string name="contact_email_adress" translatable="false">mailto:marienraat@riseup.net</string>
     <string name="project_page_title">Visit the project page</string>
     <string name="project_page_summary">Find more info, leave feedback and contribute</string>
-    <string name="project_page_url" translatable="false">https://github.com/raatmarien/red-moon</string>
+    <string name="pref_title_integration">Integration with other apps</string>
+    <string name="pref_summary_integration">Some apps, like LibreTasks or Tasker, allow you to automate tasks when certain events happen. Red Moon sends a public notification when it turns on and off, so those apps can respond. If you don\'t use or develop one of those apps, you can ignore the next paragraph.\n\nRed Moon broadcasts a public intent with the action `com.jmstudios.redmoon.RED_MOON_TOGGLED`. The intent contains a boolean extra with the key `jmstudios.bundle.key.FILTER_IS_ON`, which indicates whether Red Moon is toggling on or off.</string>
+    <string name="pref_title_version">Version</string>
 
     <!-- Toasts -->
     <string name="toast_warning_install">You won\'t be able to install APKs while the Red Moon is on.</string>
-    <string name="toast_warning_no_location">Enable location services to update location</string>
 
     <!-- Snackbar -->
+    <string name="snackbar_warning_no_location">Enable location services to update location</string>
+    <string name="snackbar_searching_location">Searching for location</string>
+    <string name="snackbar_location_updated">Found location!</string>
     <string name="help_snackbar_text">Press the switch to enable Red Moon</string>
 
     <!-- Dialog -->
-    <string name="add_new_profile_dialog_title">Enter profile name</string>
-    <string name="add_new_profile_edit_hint">Profile name</string>
-    <string name="remove_profile_dialog_title">Delete this profile?</string>
+    <string name="add_new_filter_dialog_title">Enter filter name</string>
+    <string name="add_new_filter_edit_hint">Filter name</string>
+    <string name="remove_filter_dialog_title">Delete this filter?</string>
     <string name="set_dialog">Set</string>
     <string name="ok_dialog">OK</string>
     <string name="cancel_dialog">Cancel</string>
@@ -140,8 +147,8 @@
     you can fall asleep easily.</string>
 
     <string name="intro_slide_4_title">Get started!</string>
-    <string name="intro_slide_4_text">To turn on Red Moon, press the
-    switch in the top right corner.</string>
+    <string name="intro_slide_4_text">Turn Red Moon on and off with the switch
+        in the top right corner.</string>
 
     <!-- Profiles -->
     <!-- standard_profiles_array -->
@@ -155,10 +162,17 @@
     <string name="time_toggle_options_array_1">Automatic (sun)</string>
     <string name="time_toggle_options_array_2">Automatic (custom)</string>
 
-    <string-array name="time_toggle_values_array"
-                  translatable="false">
-      <item>never</item>
-      <item>sun</item>
-      <item>custom</item>
-    </string-array>
+    <!-- button_backlight_entries -->
+    <string name="pref_button_backlight_entries_array_0">System managed</string>
+    <string name="pref_button_backlight_entries_array_1">Use filter dim level</string>
+    <string name="pref_button_backlight_entries_array_2">Turn off</string>
+
+    <!-- Currently unused -->
+    <string name="action_next_profile">Next profile</string>
+    <string name="add_new_profile_dialog_title">Enter profile name</string>
+    <string name="add_new_profile_edit_hint">Profile name</string>
+    <string name="remove_profile_dialog_title">Delete this profile?</string>
+    <string name="pref_title_appearance">Profile</string>
+    <string name="searching_location">Searching for location</string>
+    <string name="toast_warning_no_location">Enable location services to update location</string>
 </resources>

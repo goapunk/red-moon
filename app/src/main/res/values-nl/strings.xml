@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="app_name">Red Moon</string>
+<resources>
+    <string name="app_name">Red Moon</string>
     <string name="running">Loopt. Zet uit om apks te installeren</string>
     <string name="paused">Gepauzeerd</string>
 
-    <string name="pref_title_appearance">Profiel</string>
+    <string name="pref_title_filter">Profiel</string>
     <string name="time_toggle_activity">Filter tijden</string>
     <string name="pref_title_time_toggle">Filter tijden</string>
     <string name="pref_title_startup">Opstarten</string>
@@ -23,7 +24,7 @@
     <string name="location_not_set">Niet ingesteld</string>
     <string name="latitude_short">Breedte</string>
     <string name="longitude_short">Lengte</string>
-    <string name="searching_location">Locatie aan het zoeken</string>
+    <string name="snackbar_searching_location">Locatie aan het zoeken</string>
 
     <string name="dark_theme">Donker thema</string>
 
@@ -32,13 +33,13 @@
     <string name="project_page_title">Bezoek de project pagina</string>
     <string name="project_page_summary">Vind informatie, geef feedback en help mee</string>
     <string name="toast_warning_install">Je kan geen APKs installeren terwijl Red Moon aan is.</string>
-    <string name="toast_warning_no_location">Zet locatiediensten aan om de locatie te hernieuwen</string>
+    <string name="snackbar_warning_no_location">Zet locatiediensten aan om de locatie te hernieuwen</string>
 
     <string name="help_snackbar_text">Druk de schakelaar om Red Moon in te schakelen</string>
 
-    <string name="add_new_profile_dialog_title">Voer de naam van het profiel in</string>
-    <string name="add_new_profile_edit_hint">Profielnaam</string>
-    <string name="remove_profile_dialog_title">Verwijder dit profiel?</string>
+    <string name="add_new_filter_dialog_title">Voer de naam van het profiel in</string>
+    <string name="add_new_filter_edit_hint">Profielnaam</string>
+    <string name="remove_filter_dialog_title">Verwijder dit profiel?</string>
     <string name="set_dialog">Stel in</string>
     <string name="ok_dialog">OK</string>
     <string name="cancel_dialog">Annuleren</string>
@@ -60,7 +61,7 @@
     <string name="pause_action">Pauzeer</string>
 
     <string name="intro_label">Intro</string>
-    <string name="show_intro_text">Bekijk de intro</string>
+    <string name="show_intro_text">Bekijk de intro opnieuw</string>
 
     <string name="intro_slide_1_title">Welkom!</string>
     <string name="intro_slide_1_text">Welkom in Red Moon!</string>
@@ -72,7 +73,7 @@
     <string name="intro_slide_3_text">Blauw licht onderdrukt de productie van Melatonine, een hormoon dat helpt bij het in slaap vallen in de avond. Red Moon filtert het blauwe licht uit uw scherm, waardoor het makkelijker wordt om \'s avonds in slaap te vallen.</string>
 
     <string name="intro_slide_4_title">Aan de slag!</string>
-    <string name="intro_slide_4_text">Klik op de schakelaar in de rechter bovenhoek om Red Moon aan te zetten.</string>
+    <string name="intro_slide_4_text">Doe Red Moon aan en uit met de schakelaar in de rechter bovenhoek.</string>
 
     <string name="secure_suspend_activity">Pauzeer in beveiligde apps</string>
 
@@ -87,7 +88,7 @@
     <string name="action_on">Zet aan</string>
     <string name="action_off">Zet uit</string>
 
-    <string name="use_location_title">Tijden gebaseerd op locatie</string>
+    <string name="pref_summaryoff_use_location">Tijden gebaseerd op locatie</string>
     <string name="secure_suspend_title">Pauzeer in beveiligde apps</string>
     <string name="secure_suspend_summary">Sommige functies van Android zijn beschermt tegen filters over het scherm en zullen daarom niet werken als Red Moon aanstaat, bijvoorbeeld het installeren van APK\'s of het toekennen van permissies op Android 6.0+.
 
@@ -101,6 +102,29 @@ Het aanzetten van deze functie kan uw batterijduur lichtelijk verminderen op som
 
 Red Moon zal deze data alleen gebruiken om te bepalen wanneer u beveiligde functies gebruikt, zodat de filter automatisch gepauzeerd kan worden.</string>
 
-    <string name="action_next_profile">Volgende profiel</string>
+    <string name="action_next_filter">Volgende profiel</string>
 
+    <string name="menu_about">Over Red Moon</string>
+    <string name="activity_about">Over Red Moon</string>
+    <string name="pref_title_integration">Integratie met andere apps</string>
+    <string name="pref_summary_integration">"Sommige apps, zoals LibreTasks or Tasker, staan je toe om taken te automatiseren wanneer bepaalde dingen gebeuren. Red Moon verstuurd  een publiek signaal wanneer het aan of uit gaat, zodat zulke apps hierop kunnen reageren. Als je deze apps niet gebruikt of maakt, hoef je je geen zorgen te maken over deze uitleg.
+
+Red Moon verstuurd een publieke Intent met the actie `com.jmstudios.redmoon.RED_MOON_TOGGLED` . Deze intent bevat een boolean extra waarde met de key `jmstudios.bundle.key.FILTER_IS_ON`, die aangeeft of Red Moon aan of uit aan het gaan is."</string>
+    <string name="pref_title_version">Versie</string>
+
+    <!-- Currently unused -->
+    <string name="add_new_profile_dialog_title">Voer de naam van het profiel in</string>
+    <string name="add_new_profile_edit_hint">Profielnaam</string>
+    <string name="remove_profile_dialog_title">Verwijder dit profiel?</string>
+    <string name="action_next_profile">Volgende profiel</string>
+    <string name="pref_title_appearance">Profiel</string>
+    <string name="pref_title_button_backlight_disclaimer">Geen effect op sommige toestellen</string>
+    <string name="pref_title_button_backlight">Achtergrondverlichting van hardware knoppen</string>
+
+    <string name="pref_button_backlight_entries_array_0">Door Android beheerd</string>
+    <string name="pref_button_backlight_entries_array_1">Gebruik het filter verduister niveau</string>
+    <string name="pref_button_backlight_entries_array_2">Zet uit</string>
+
+    <string name="searching_location">Locatie aan het zoeken</string>
+    <string name="toast_warning_no_location">Zet locatiediensten aan om de locatie te hernieuwen</string>
     </resources>

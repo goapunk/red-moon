@@ -17,25 +17,11 @@
  */
 package com.jmstudios.redmoon.fragment
 
-import android.os.Bundle
 import android.preference.PreferenceFragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 
 import org.greenrobot.eventbus.EventBus
 
 abstract class EventPreferenceFragment : PreferenceFragment() {
-    private lateinit var mView: View
-
-    // This can be deleted if we don't end up using showHelpSnackBar, commented out below
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val v = super.onCreateView(inflater, container, savedInstanceState)
-        mView = v
-        return v
-    }
-
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -45,20 +31,4 @@ abstract class EventPreferenceFragment : PreferenceFragment() {
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
-
-    /* private fun showHelpSnackbar() { */
-    /*     mHelpSnackbar = Snackbar.make(mView, activity.getString(R.string.help_snackbar_text), */
-    /*             Snackbar.LENGTH_INDEFINITE) */
-
-    /*     if (Config.darkThemeFlag) { */
-    /*         val group = mHelpSnackbar.view as ViewGroup */
-    /*         group.setBackgroundColor(ContextCompat.getColor(activity, R.color.snackbar_color_dark_theme)) */
-
-    /*         val snackbarTextId = android.support.design.R.id.snackbar_text */
-    /*         val textView = group.findViewById(snackbarTextId) as TextView */
-    /*         textView.setTextColor(ContextCompat.getColor(activity, R.color.text_color_dark_theme)) */
-    /*     } */
-
-    /*     mHelpSnackbar.show() */
-    /* } */
 }

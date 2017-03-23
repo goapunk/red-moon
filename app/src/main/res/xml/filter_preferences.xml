@@ -37,7 +37,7 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <PreferenceCategory android:title="@string/pref_title_appearance">
+  <PreferenceCategory android:title="@string/pref_title_filter">
     <com.jmstudios.redmoon.preference.ProfileSelectorPreference
         android:key="@string/pref_key_profile_spinner"
         android:defaultValue="1"/>
@@ -60,34 +60,35 @@
     <SwitchPreference
         android:key="@string/pref_key_lower_brightness"
         android:title="@string/control_brightness_title"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/pref_title_other"
-                      android:key="pref_key_other" >
+  <PreferenceCategory android:title="@string/pref_title_other">
     <Preference
         android:title="@string/pref_title_time_toggle"
         android:key="@string/pref_key_time_toggle_header">
-      <!-- Specifying a specific action for this activity seems like
-           an effective way to ensure that the right Activity is
-           opened. -->
         <intent
-            android:action="com.jmstudios.redmoon.activity.TimeToggleActivity" />
-  </Preference>
+            android:targetPackage="@string/applicationId"
+            android:targetClass="com.jmstudios.redmoon.activity.TimeToggleActivity" />
+    </Preference>
 
-  <Preference
+    <Preference
         android:title="@string/secure_suspend_title"
         android:key="@string/pref_key_secure_suspend_header">
-      <!-- Specifying a specific action for this activity seems like
-           an effective way to ensure that the right Activity is
-           opened. -->
         <intent
-            android:action="com.jmstudios.redmoon.activity.SecureSuspendActivity" />
-  </Preference>
+            android:targetPackage="@string/applicationId"
+            android:targetClass="com.jmstudios.redmoon.activity.SecureSuspendActivity"/>
+    </Preference>
 
-    <SwitchPreference
-        android:key="@string/pref_key_dark_theme"
-        android:title="@string/dark_theme"
-        android:defaultValue="false" />
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/pref_title_button_backlight_disclaimer" >
+    <ListPreference
+        android:key="@string/pref_key_button_backlight"
+        android:title="@string/pref_title_button_backlight"
+        android:entries="@array/pref_button_backlight_entries"
+        android:entryValues="@array/pref_button_backlight_values"
+        android:defaultValue="@string/pref_button_backlight_values_array_2">
+    </ListPreference>
   </PreferenceCategory>
 </PreferenceScreen>

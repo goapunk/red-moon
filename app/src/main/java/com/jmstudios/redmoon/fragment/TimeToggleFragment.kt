@@ -18,25 +18,25 @@
 package com.jmstudios.redmoon.fragment
 
 import android.os.Bundle
-import android.preference.Preference
 import android.preference.SwitchPreference
-import android.widget.Toast
+import android.support.design.widget.Snackbar
+import android.view.ViewGroup
+import android.widget.TextView
 
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.preference.TimePickerPreference
-import com.jmstudios.redmoon.receiver.TimeToggleChangeReceiver
 import com.jmstudios.redmoon.service.LocationUpdateService
 import com.jmstudios.redmoon.util.hasLocationPermission
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.util.getColor
 import com.jmstudios.redmoon.util.requestLocationPermission
 
 import org.greenrobot.eventbus.Subscribe
 
 
 class TimeToggleFragment : EventPreferenceFragment() {
-    private var mIsSearchingLocation = false
 
     // Preferences
     private val timeTogglePref: SwitchPreference
@@ -51,24 +51,25 @@ class TimeToggleFragment : EventPreferenceFragment() {
         get() = (preferenceScreen.findPreference
                 (getString(R.string.pref_key_custom_turn_off_time)) as TimePickerPreference)
 
-    private val locationPref: Preference
-        get() = preferenceScreen.findPreference(getString(R.string.pref_key_location))
-
     private val useLocationPref: SwitchPreference
         get() = (preferenceScreen.findPreference
                 (getString(R.string.pref_key_use_location)) as SwitchPreference)
 
+    private var mSnackbar: Snackbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         addPreferencesFromResource(R.xml.time_toggle_preferences)
-        updatePrefs()
+    }
 
-        locationPref.onPreferenceClickListener =
-            Preference.OnPreferenceClickListener {
-                LocationUpdateService.start()
-                true
-            }
+    override fun onStart() {
+        super.onStart()
+        LocationUpdateService.update()
+    }
+
+    override fun onResume() {
+        updatePrefs()
+        super.onResume()
     }
 
     private fun updatePrefs() {
@@ -85,117 +86,96 @@ class TimeToggleFragment : EventPreferenceFragment() {
     }
 
     private fun updateLocationPref() {
-        locationPref.summary = when {
-            mIsSearchingLocation                -> getString(R.string.searching_location)
-            Config.location == DEFAULT_LOCATION -> getString(R.string.location_not_set)
-            else -> with (Config.location) {
-                val x = indexOf(",")
-                val latitude = java.lang.Double.parseDouble(substring(0, x))
-                val longitude = java.lang.Double.parseDouble(substring(x + 1, length))
+        val (latitude, longitude, time) = Config.location
+        useLocationPref.summaryOn = if (time == null) {
+            getString(R.string.location_not_set)
+        } else {
+            val lat  = getString(R.string.latitude_short)
+            val long = getString(R.string.longitude_short)
 
-                val latitudeStr = getString(R.string.latitude_short)
-                val longitudeStr = getString(R.string.longitude_short)
-
-                "$latitudeStr: $latitude, $longitudeStr: $longitude"
-            }
+            "$lat: ${latitude.round()}, $long: ${longitude.round()}"
         }
     }
 
+    private fun String.round(digitsAfterDecimal: Int = 3): String {
+        val digits = this.indexOf(".") + digitsAfterDecimal
+        return this.padEnd(digits+1).substring(0..digits).trimEnd()
+    }
+
     private fun updateTimePrefs() {
-        val auto = Config.timeToggle
-        val useLocation = Config.useLocation
-        val enabled = auto && !useLocation
-        Log("auto: $auto, useLocation: $useLocation, enabled: $enabled")
-        automaticTurnOnPref.isEnabled = enabled
+        val enabled = Config.timeToggle && !Config.useLocation
+        automaticTurnOnPref.isEnabled  = enabled
         automaticTurnOffPref.isEnabled = enabled
-        automaticTurnOnPref.summary = Config.automaticTurnOnTime
+        automaticTurnOnPref.summary  = Config.automaticTurnOnTime
         automaticTurnOffPref.summary = Config.automaticTurnOffTime
+    }
+
+    private fun showSnackbar(resId: Int, duration: Int = Snackbar.LENGTH_INDEFINITE) {
+        mSnackbar = Snackbar.make(view, getString(resId), duration).apply {
+            if (Config.darkThemeFlag) {
+                val group = this.view as ViewGroup
+                group.setBackgroundColor(getColor(R.color.snackbar_color_dark_theme))
+
+                val snackbarTextId = android.support.design.R.id.snackbar_text
+                val textView = group.findViewById(snackbarTextId) as TextView
+                textView.setTextColor(getColor(R.color.text_color_dark_theme))
+            }
+        }
+        mSnackbar?.show()
+    }
+
+    private fun dismissSnackBar() {
+        if (mSnackbar?.duration == Snackbar.LENGTH_INDEFINITE) {
+            mSnackbar?.dismiss()
+        }
     }
 
     //region presenter
     @Subscribe
     fun onTimeToggleChanged(event: timeToggleChanged) {
-        Log("Filter mode changed to " + Config.timeToggle)
+        LocationUpdateService.update()
         updatePrefs()
-        if (Config.timeToggle) {
-            TimeToggleChangeReceiver.rescheduleOnCommand(activity)
-            TimeToggleChangeReceiver.rescheduleOffCommand(activity)
-        } else {
-            TimeToggleChangeReceiver.cancelAlarms(activity)
-        }
-    }
-
-    @Subscribe
-    fun onCustomTurnOnTimeChanged(event: customTurnOnTimeChanged) {
-        TimeToggleChangeReceiver.rescheduleOnCommand(activity)
-    }
-
-    @Subscribe
-    fun onCustomTurnOffTimeChanged(event: customTurnOffTimeChanged) {
-        TimeToggleChangeReceiver.rescheduleOffCommand(activity)
     }
 
     @Subscribe
     fun onUseLocationChanged(event: useLocationChanged) {
-        if (Config.useLocation) {
-            mIsSearchingLocation = true
-            LocationUpdateService.start()
-        }
+        LocationUpdateService.update()
         updateTimePrefs()
     }
 
     @Subscribe
-    fun onLocationUpdating(event: locationUpdating) {
-        mIsSearchingLocation = true
-        updateLocationPref()
+    fun onLocationServiceEvent(service: locationService) {
+        Log.i("onLocationEvent: ${service.isSearching}")
+        if (!service.isRunning) {
+            dismissSnackBar()
+        } else if (service.isSearching) {
+            showSnackbar(R.string.snackbar_searching_location)
+        } else {
+            showSnackbar(R.string.snackbar_warning_no_location)
+        }
     }
 
     @Subscribe
     fun onLocationChanged(event: locationChanged) {
-        mIsSearchingLocation = false
+        showSnackbar(R.string.snackbar_location_updated, Snackbar.LENGTH_SHORT)
         updateLocationPref()
     }
 
     @Subscribe
     fun onLocationAccessDenied(event: locationAccessDenied) {
-        if (mIsSearchingLocation) {
+        if (Config.timeToggle && Config.useLocation) {
             requestLocationPermission(activity)
         }
     }
 
     @Subscribe
     fun onLocationPermissionDialogClosed(event: locationPermissionDialogClosed) {
-        if (hasLocationPermission) {
-            LocationUpdateService.start()
-        } else {
+        if (!hasLocationPermission) {
             useLocationPref.isChecked = false
         }
-    }
-
-    @Subscribe
-    fun onLocationServicesDisabled(event: locationServicesDisabled) {
-        if (mIsSearchingLocation) {
-            val toast = Toast.makeText(activity,
-                                       getString(R.string.toast_warning_no_location),
-                                       Toast.LENGTH_SHORT)
-            toast.show()
-            mIsSearchingLocation = false
-            updateLocationPref()
-        }
-    }
-
-    @Subscribe
-    fun onSunsetTimeChanged(event: sunsetTimeChanged) {
-        TimeToggleChangeReceiver.rescheduleOnCommand(activity)
-    }
-
-    @Subscribe
-    fun onSunriseTimeChanged(event: sunriseTimeChanged) {
-        TimeToggleChangeReceiver.rescheduleOffCommand(activity)
+        LocationUpdateService.update()
     }
     //endregion
 
-    companion object {
-        const val DEFAULT_LOCATION = "not set"
-    }
+    companion object : Logger()
 }
