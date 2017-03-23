@@ -20,11 +20,11 @@ package com.jmstudios.redmoon.model
 import android.content.Context
 
 import com.jmstudios.redmoon.R
-import com.jmstudios.redmoon.helper.Profile
 
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Profile
 import com.jmstudios.redmoon.util.appContext
 import com.jmstudios.redmoon.util.getString
+import com.jmstudios.redmoon.util.Logger
 
 /**
  * This singleton manages the SharedPreference that store all custom
@@ -46,7 +46,8 @@ object ProfilesModel: Logger() {
     private val defaultProfiles: List<Profile> =
             listOf(Profile(getString(R.string.standard_profiles_array_0),  0,  0,  0, false),
                    Profile(getString(R.string.standard_profiles_array_1), 10, 30, 40, false),
-                   Profile(getString(R.string.standard_profiles_array_2), 20, 60, 78, false))
+                   Profile(getString(R.string.standard_profiles_array_2), 20, 60, 78, false),
+                   Profile(getString(R.string.default_filter_dim_only),    0,  0, 60,  true))
 
     private val mProfiles: ArrayList<Profile> = ArrayList(prefs.all.run {
         if (isEmpty()) {

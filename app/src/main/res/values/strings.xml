@@ -156,6 +156,7 @@
     <string name="standard_profiles_array_0">Custom</string>
     <string name="standard_profiles_array_1">Default</string>
     <string name="standard_profiles_array_2">Reading</string>
+    <string name="default_filter_dim_only">Dim only</string>
 
     <!-- Time toggle -->
     <!-- time_toggle_options_array -->
