@@ -55,7 +55,9 @@ import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.application.RedMoonApplication
 import com.jmstudios.redmoon.event.locationPermissionDialogClosed
+import com.jmstudios.redmoon.helper.Profile
 import com.jmstudios.redmoon.model.Config
+import com.jmstudios.redmoon.model.ProfilesModel
 
 import org.greenrobot.eventbus.EventBus
 
@@ -132,6 +134,9 @@ fun handleUpgrades() {
             upgradeFrom(26)
         } in 26..27 -> {
             upgradeFrom(28)
+        } 28 -> {
+            upgradeProfiles()
+            upgradeFrom(29)
         } else -> {
             Log.e("handleUpgrades", "Didn't catch upgrades from version $version")
             upgradeFrom(version+1)
@@ -148,4 +153,36 @@ private fun upgradeToggleModePreferences() {
     sharedPrefs.edit().remove(timerKey).apply()
     Config.timeToggle = currentToggleMode != "manual"
     Config.useLocation = currentToggleMode == "sun"
+}
+
+fun upgradeProfiles() {
+    val PREFERENCE_NAME = "com.jmstudios.redmoon.PROFILES_PREFERENCE"
+    val MODE = Context.MODE_PRIVATE
+    val prefs  = appContext.getSharedPreferences(PREFERENCE_NAME, MODE)
+
+    val profiles = prefs.all.entries.map { (key, v) ->
+        val values = v as String
+
+        val index      = Integer.parseInt(key.substringAfter('_')) + 1
+        val pName      = key.substringBefore('_')
+        val pColor     = Integer.parseInt(values.substringBefore(','))
+        val pIntensity = Integer.parseInt(values.substringAfter(',').substringBefore(','))
+        val pDim       = Integer.parseInt(values.substringAfterLast(','))
+        val profile    = Profile(pName, pColor, pIntensity, pDim)
+
+        Pair(index.toString(), profile.toString())
+    }
+
+    val editor = prefs.edit()
+    editor.run {
+        clear()
+        putString("0", Profile("TO_BE_DELETED").toString())
+        profiles.forEach { (index, profile) ->
+            Log.i("UPGRADE_PROFILES", "Storing profile $index, $profile")
+            putString(index, profile)
+        }
+    }
+    editor.apply()
+    Config.amountProfiles = ProfilesModel.reset()
+    Config.profile = 1
 }
