@@ -37,18 +37,15 @@
 package com.jmstudios.redmoon.fragment
 
 import android.os.Bundle
-import android.preference.ListPreference
 import android.preference.Preference
-import android.preference.SwitchPreference
+import android.preference.TwoStatePreference
 
 import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.preference.ColorSeekBarPreference
-import com.jmstudios.redmoon.preference.DimSeekBarPreference
-import com.jmstudios.redmoon.preference.IntensitySeekBarPreference
 import com.jmstudios.redmoon.preference.ProfileSelectorPreference
+import com.jmstudios.redmoon.preference.SeekBarPreference
 import com.jmstudios.redmoon.util.hasWriteSettingsPermission
 import com.jmstudios.redmoon.util.requestWriteSettingsPermission
 import com.jmstudios.redmoon.util.Logger
@@ -65,21 +62,21 @@ class FilterFragment : EventPreferenceFragment() {
              get() = (preferenceScreen.findPreference
                      (getString(R.string.pref_key_profile_spinner)) as ProfileSelectorPreference)
 
-    private val colorPref: ColorSeekBarPreference
+    private val colorPref: SeekBarPreference
         get() = (preferenceScreen.findPreference
-                (getString(R.string.pref_key_color)) as ColorSeekBarPreference)
+                (getString(R.string.pref_key_color)) as SeekBarPreference)
 
-    private val intensityPref: IntensitySeekBarPreference
+    private val intensityPref: SeekBarPreference
         get() = (preferenceScreen.findPreference
-                (getString(R.string.pref_key_intensity)) as IntensitySeekBarPreference)
+                (getString(R.string.pref_key_intensity)) as SeekBarPreference)
 
-    private val dimPref: DimSeekBarPreference
+    private val dimPref: SeekBarPreference
         get()= (preferenceScreen.findPreference
-               (getString(R.string.pref_key_dim)) as DimSeekBarPreference)
+               (getString(R.string.pref_key_dim)) as SeekBarPreference)
 
-    private val lowerBrightnessPref: SwitchPreference
+    private val lowerBrightnessPref: TwoStatePreference
         get() = (preferenceScreen.findPreference
-                (getString(R.string.pref_key_lower_brightness)) as SwitchPreference)
+                (getString(R.string.pref_key_lower_brightness)) as TwoStatePreference)
 
     private val timeTogglePref: Preference
         get() = (preferenceScreen.findPreference(getString(R.string.pref_key_time_toggle_header)))
@@ -87,13 +84,8 @@ class FilterFragment : EventPreferenceFragment() {
     private val secureSuspendPref: Preference
         get() = preferenceScreen.findPreference(getString(R.string.pref_key_secure_suspend_header))
 
-    private val darkThemePref: SwitchPreference
-        get() = (preferenceScreen.findPreference
-                (getString(R.string.pref_key_dark_theme)) as SwitchPreference)
-
-    private val buttonBacklightPref: ListPreference
-        get() = (preferenceScreen.findPreference
-                (getString(R.string.pref_key_button_backlight)) as ListPreference)
+    private val buttonBacklightPref: Preference
+        get() = preferenceScreen.findPreference(getString(R.string.pref_key_button_backlight))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

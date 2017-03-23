@@ -24,6 +24,7 @@ import android.preference.PreferenceManager
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.model.Config
+import com.jmstudios.redmoon.model.ProfilesModel
 import com.jmstudios.redmoon.receiver.TimeToggleChangeReceiver
 import com.jmstudios.redmoon.util.Logger
 
@@ -84,6 +85,21 @@ class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceCha
 
     // There's probably a better place to do this to keep this class clean
     // For now it works, though
+    @Subscribe
+    fun onProfileChanged(event: profileChanged) {
+        val index = Config.profile
+        Log.i("setProfile: $index")
+        // TODO: Allow updating the profile before the related settings without causing bugs
+        // Update settings that are based on the profile
+        ProfilesModel.getProfile(index).run {
+            Log.i("color=$color, intensity=$intensity, dim=$dim, lb=$lowerBrightness")
+            Config.color           = color
+            Config.intensity       = intensity
+            Config.dim             = dim
+            Config.lowerBrightness = lowerBrightness
+        }
+    }
+
     @Subscribe
     fun onTimeToggleChanged(event: timeToggleChanged) {
         Log.i("Timer turned ${if (Config.timeToggle) "on" else "off"}")
