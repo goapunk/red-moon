@@ -31,6 +31,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_restore_filters"
+        android:title="@string/menu_restore_filters"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/show_intro_button"
         android:title="@string/show_intro_text"
         app:showAsAction="never"
