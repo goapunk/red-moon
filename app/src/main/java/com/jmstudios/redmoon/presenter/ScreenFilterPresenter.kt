@@ -58,10 +58,11 @@ import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.activity.MainActivity
 import com.jmstudios.redmoon.event.*
-import com.jmstudios.redmoon.helper.*
+import com.jmstudios.redmoon.helper.AbstractAnimatorListener
 import com.jmstudios.redmoon.manager.ScreenManager
 import com.jmstudios.redmoon.manager.WindowViewManager
 import com.jmstudios.redmoon.model.Config
+import com.jmstudios.redmoon.model.ProfilesModel
 import com.jmstudios.redmoon.receiver.NextProfileCommandReceiver
 import com.jmstudios.redmoon.receiver.OrientationChangeReceiver
 import com.jmstudios.redmoon.receiver.ScreenStateReceiver
@@ -228,7 +229,7 @@ class ScreenFilterPresenter(private val mServiceController: ServiceLifeCycleCont
         open protected val toggleCommand    = ScreenFilterService.Command.ON
 
         open protected val notificationContentText
-            get() = ProfilesHelper.getProfileName(Config.profile)
+            get() = ProfilesModel.getProfileName(Config.profile)
 
         protected val notification: NotificationCompat.Builder
             get() = NotificationCompat.Builder(mContext).apply {
