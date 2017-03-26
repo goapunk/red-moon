@@ -17,32 +17,28 @@
 
 package com.jmstudios.redmoon.event
 
-/* EventBus uses classes as events. These are the available events to send */
+import com.jmstudios.redmoon.helper.EventBus.Event
 
-abstract class Event
+class filterIsOnChanged        : Event
+class dimChanged               : Event
+class intensityChanged         : Event
+class colorChanged             : Event
+//class themeChanged             : Event
+class customTurnOnTimeChanged  : Event
+class customTurnOffTimeChanged : Event
+class lowerBrightnessChanged   : Event
+class profileChanged           : Event
+class amountProfilesChanged    : Event
+class timeToggleChanged        : Event
+class useLocationChanged       : Event
+class locationChanged          : Event
+class sunsetTimeChanged        : Event
+class sunriseTimeChanged       : Event
+class secureSuspendChanged     : Event
+class buttonBacklightChanged   : Event
 
-class filterIsOnChanged        : Event()
-class dimChanged               : Event()
-class intensityChanged         : Event()
-class colorChanged             : Event()
-//class themeChanged             : Event()
-class customTurnOnTimeChanged  : Event()
-class customTurnOffTimeChanged : Event()
-class lowerBrightnessChanged   : Event()
-class profileChanged           : Event()
-class amountProfilesChanged    : Event()
-class timeToggleChanged        : Event()
-class useLocationChanged       : Event()
-class locationChanged          : Event()
-class sunsetTimeChanged        : Event()
-class sunriseTimeChanged       : Event()
-class secureSuspendChanged     : Event()
-class buttonBacklightChanged   : Event()
+class overlayPermissionDenied  : Event
+class locationAccessDenied     : Event
+class changeBrightnessDenied   : Event
 
-class overlayPermissionDenied  : Event()
-class locationAccessDenied     : Event()
-class changeBrightnessDenied   : Event()
-class locationPermissionDialogClosed : Event()
-
-data class mainUI(val isOpen: Boolean) : Event()
-data class locationService(val isSearching: Boolean, val isRunning: Boolean = true) : Event()
+data class locationService(val isSearching: Boolean, val isRunning: Boolean = true) : Event

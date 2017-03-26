@@ -23,7 +23,7 @@ import android.preference.PreferenceFragment
 import com.jmstudios.redmoon.BuildConfig
 
 import com.jmstudios.redmoon.R
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Logger
 import de.cketti.library.changelog.ChangeLog
 
 class AboutFragment : PreferenceFragment() {

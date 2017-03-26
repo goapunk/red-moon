@@ -35,17 +35,18 @@
  */
 package com.jmstudios.redmoon.manager
 
-import com.jmstudios.redmoon.util.Logger
+import android.animation.Animator
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.view.WindowManager
 
+import com.jmstudios.redmoon.helper.AbstractAnimatorListener
+import com.jmstudios.redmoon.helper.Profile
 import com.jmstudios.redmoon.view.ScreenFilterView
+import com.jmstudios.redmoon.helper.Logger
 
-/**
- * Convenience class that wraps [WindowManager] for dependency injection.
- */
-class WindowViewManager(private val mWindowManager: WindowManager,
-                        val mView: ScreenFilterView) {
-
+class WindowViewManager(private val mView: ScreenFilterView,
+                        private val mWindowManager: WindowManager) {
     companion object : Logger()
 
     private var mScreenFilterOpen = false
@@ -55,14 +56,26 @@ class WindowViewManager(private val mWindowManager: WindowManager,
      * *
      * @param wlp the [android.view.WindowManager.LayoutParams] to use when laying out the window.
      */
-    fun openWindow(wlp: WindowManager.LayoutParams) {
-        if (mScreenFilterOpen) {
-            Log.i("Screen filter is already open!")
-        } else {
-            Log.i("Opening screen filter")
-            // Display the transparent filter
+    fun openWindow(wlp: WindowManager.LayoutParams, profile: Profile, time: Int = 0) {
+        fun open() {
             mWindowManager.addView(mView, wlp)
             mScreenFilterOpen = true
+        }
+        if (mScreenFilterOpen) {
+            reLayoutWindow(wlp)
+            animateIntensity(profile.intensity, time)
+            animateDimLevel (profile.dimLevel,  time)
+            animateColor    (profile.color,     time)
+        } else if (time == 0) {
+            Log.i("Opening screen filter instantly")
+            mView.profile = profile
+            open()
+        } else {
+            Log.i("Opening screen filter to $profile, animating over $time")
+            // Display the transparent filter
+            animateIntensity(profile.intensity, time, 0)
+            animateDimLevel (profile.dimLevel,  time, 0)
+            open()
         }
     }
 
@@ -74,14 +87,93 @@ class WindowViewManager(private val mWindowManager: WindowManager,
     }
 
     // Closes the Window that is currently displaying `mView`.
-    fun closeWindow() {
-        if (mScreenFilterOpen) {
-            Log.i("Closing screen filter")
-            // Close the window once the fade-out animation is complete
+    fun closeWindow(time: Int = 0) {
+        fun close() {
+            Log.i("Closing screen filter instantly")
             mWindowManager.removeView(mView)
             mScreenFilterOpen = false
-        } else {
-            Log.i("Can't close Screen filter; it's already closed")
         }
+
+        if (!mScreenFilterOpen) {
+            Log.w("Can't close Screen filter; it's already closed")
+        } else if (time == 0) {
+            close()
+        } else {
+            Log.i("Closing screen filter; animating out over $time")
+            val listener = object: AbstractAnimatorListener() {
+                override fun onAnimationEnd(animator: Animator) { close() }
+            }
+            animateIntensity(0, time, mView.filterIntensityLevel)
+            animateDimLevel (0, time, mView.filterDimLevel, listener)
+        }
+    }
+
+    fun setColor(color: Int) {
+        mColorAnimator.cancelRunning()
+        mView.color = color
+    }
+
+    fun setIntensity(intensity: Int) {
+        mIntensityAnimator.cancelRunning()
+        mView.filterIntensityLevel = intensity
+    }
+
+    fun setDim(dim: Int) {
+        mDimAnimator.cancelRunning()
+        mView.filterDimLevel = dim
+    }
+
+    private var mIntensityAnimator: ValueAnimator = intAnimator(0, 0, 0, null)
+    private var mDimAnimator:       ValueAnimator = intAnimator(0, 0, 0, null)
+    private var mColorAnimator:     ValueAnimator = ValueAnimator.ofObject(ArgbEvaluator(), 0, 0)
+
+    private fun intAnimator(to: Int, from: Int, over: Int,
+                            listener: Animator.AnimatorListener?): ValueAnimator {
+        return ValueAnimator.ofInt(from, to).apply {
+            duration = over.toLong()
+            if (listener != null) { addListener(listener) }
+        }
+    }
+
+    fun ValueAnimator.cancelRunning() {
+        if (isRunning) cancel()
+    }
+
+    private fun animateColor(color: Int, time: Int, startColor: Int = mView.color) {
+        mColorAnimator.cancelRunning()
+
+        mColorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), startColor, color).apply {
+            duration = time.toLong()
+            addUpdateListener { valueAnimator ->
+                mView.color = valueAnimator.animatedValue as Int
+            }
+        }
+        mColorAnimator.start()
+    }
+
+    private fun animateDimLevel(dimLevel: Int, time: Int, startLevel: Int = mView.filterDimLevel,
+                                listener: Animator.AnimatorListener? = null) {
+        mDimAnimator.cancelRunning()
+
+        mDimAnimator = intAnimator(dimLevel, startLevel, time, listener).apply {
+            addUpdateListener { valueAnimator ->
+                mView.filterDimLevel = valueAnimator.animatedValue as Int
+            }
+        }
+
+        mDimAnimator.start()
+    }
+
+    private fun animateIntensity(intensity: Int, time: Int,
+                                 startLevel: Int = mView.filterIntensityLevel,
+                                 listener: Animator.AnimatorListener? = null) {
+        mIntensityAnimator.cancelRunning()
+
+        mIntensityAnimator = intAnimator(intensity, startLevel, time, listener).apply {
+            addUpdateListener { valueAnimator ->
+                mView.filterIntensityLevel = valueAnimator.animatedValue as Int
+            }
+        }
+        mIntensityAnimator.start()
     }
 }

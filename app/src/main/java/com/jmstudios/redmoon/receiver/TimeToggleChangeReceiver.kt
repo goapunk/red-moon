@@ -26,13 +26,13 @@ import android.net.Uri
 import android.os.Handler
 
 import com.jmstudios.redmoon.helper.DismissNotificationRunnable
+import com.jmstudios.redmoon.helper.Logger
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.presenter.ScreenFilterPresenter
 import com.jmstudios.redmoon.service.LocationUpdateService
 import com.jmstudios.redmoon.service.ScreenFilterService
 import com.jmstudios.redmoon.util.appContext
 import com.jmstudios.redmoon.util.atLeastAPI
-import com.jmstudios.redmoon.util.Logger
 
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -60,7 +60,7 @@ class TimeToggleChangeReceiver : BroadcastReceiver() {
         val handler = Handler()
 
         val runnable = DismissNotificationRunnable(context)
-        handler.postDelayed(runnable, (ScreenFilterPresenter.FADE_DURATION_MS + 100).toLong())
+        handler.postDelayed(runnable, (ScreenFilterPresenter.FADE_DURATION_LONG + 100).toLong())
 
         LocationUpdateService.update(foreground = false)
     }

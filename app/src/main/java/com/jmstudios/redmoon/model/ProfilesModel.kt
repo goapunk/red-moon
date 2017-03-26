@@ -21,10 +21,9 @@ import android.content.Context
 
 import com.jmstudios.redmoon.R
 
+import com.jmstudios.redmoon.helper.Logger
 import com.jmstudios.redmoon.helper.Profile
-import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.getString
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.util.*
 
 /**
  * This singleton manages the SharedPreference that store all custom
@@ -73,8 +72,8 @@ object ProfilesModel: Logger() {
         Log.d("Done updating SharedPreferences")
     }
 
-    fun getProfileName(index: Int): String = mProfiles[index].name
-    fun getProfile(index: Int):    Profile = mProfiles[index]
+    fun getProfileName(index: Int): String  = mProfiles[index].name
+    fun getProfile    (index: Int): Profile = mProfiles[index]
 
     var custom: Profile
         get() = mProfiles[0]

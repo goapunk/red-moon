@@ -47,9 +47,9 @@ import android.widget.RemoteViews
 
 import com.jmstudios.redmoon.R
 
+import com.jmstudios.redmoon.helper.Logger
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Logger
 
 class SwitchAppWidgetProvider : AppWidgetProvider() {
 

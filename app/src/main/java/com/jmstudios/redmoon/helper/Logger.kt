@@ -37,7 +37,7 @@
  */
 
 @file:Suppress("unused", "NOTHING_TO_INLINE")
-package com.jmstudios.redmoon.util
+package com.jmstudios.redmoon.helper
 
 import android.util.Log
 import java.lang.reflect.Modifier

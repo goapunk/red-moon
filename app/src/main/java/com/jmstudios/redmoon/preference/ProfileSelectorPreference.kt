@@ -34,10 +34,10 @@ import android.widget.Spinner
 import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.event.*
+import com.jmstudios.redmoon.helper.Logger
 import com.jmstudios.redmoon.helper.Profile
 import com.jmstudios.redmoon.model.ProfilesModel
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.util.Logger
 import com.jmstudios.redmoon.util.getString
 
 import org.greenrobot.eventbus.Subscribe
@@ -50,7 +50,7 @@ class ProfileSelectorPreference(ctx: Context, attrs: AttributeSet) : Preference(
 
     lateinit internal var mArrayAdapter: ArrayAdapter<CharSequence>
 
-    private var mCurrentProfile: Profile = ProfilesModel.custom
+    private lateinit var mCurrentProfile: Profile
 
     private var mIsListenerRegistered: Boolean = false
 
@@ -64,11 +64,13 @@ class ProfileSelectorPreference(ctx: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        if (restorePersistedValue) {
-            Config.profile = getPersistedInt(DEFAULT_VALUE)
+        val index = if (restorePersistedValue) {
+            getPersistedInt(DEFAULT_VALUE)
         } else {
-            Config.profile = (defaultValue as Int?)?: 0
+            (defaultValue as Int?) ?: DEFAULT_VALUE
         }
+        mCurrentProfile = ProfilesModel.getProfile(index)
+        if (!restorePersistedValue) { persistInt(index) }
     }
 
     override fun onBindView(view: View) {
@@ -188,9 +190,9 @@ class ProfileSelectorPreference(ctx: Context, attrs: AttributeSet) : Preference(
     @Subscribe
     fun onDimChanged(event: dimChanged) {
         Log.i("onDimChanged")
-        val newDim = Config.dim
-        if (newDim != mCurrentProfile.dim) {
-            setCustom(mCurrentProfile.copy(dim = newDim))
+        val newDim = Config.dimLevel
+        if (newDim != mCurrentProfile.dimLevel) {
+            setCustom(mCurrentProfile.copy(dimLevel = newDim))
 
         }
     }

@@ -48,10 +48,10 @@ import android.os.Bundle
 import android.os.IBinder
 
 import com.jmstudios.redmoon.event.*
+import com.jmstudios.redmoon.helper.Logger
+import com.jmstudios.redmoon.helper.Permission
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.hasLocationPermission
-import com.jmstudios.redmoon.util.Logger
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator
 import org.greenrobot.eventbus.EventBus
@@ -189,7 +189,7 @@ class LocationUpdateService: Service(), LocationListener {
 
     override fun onDestroy() {
         Log.i("onDestroy")
-        if (hasLocationPermission) {
+        if (Permission.Location.isGranted) {
             locationManager.removeUpdates(this)
             updateLocation(lastKnownLocation)
         }
@@ -224,7 +224,7 @@ class LocationUpdateService: Service(), LocationListener {
 
         fun update(foreground: Boolean = true) {
             Log.i("Received request")
-            if (!hasLocationPermission) {
+            if (!Permission.Location.isGranted) {
                 EventBus.getDefault().post(locationAccessDenied())
             } else if (Config.timeToggle && Config.useLocation) {
                 val i = intent.putExtra(BUNDLE_KEY_FOREGROUND, foreground)

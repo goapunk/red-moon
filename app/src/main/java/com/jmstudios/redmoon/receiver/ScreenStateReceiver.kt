@@ -21,7 +21,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Logger
 
 class ScreenStateReceiver(private val mListener: ScreenStateReceiver.ScreenStateListener?) : BroadcastReceiver() {
 

@@ -28,7 +28,7 @@ import android.provider.Settings
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.thread.CurrentAppMonitoringThread
 import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Logger
 
 class SecureSuspendFragment : PreferenceFragment() {
 

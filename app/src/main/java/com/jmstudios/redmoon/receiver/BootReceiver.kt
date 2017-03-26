@@ -42,10 +42,11 @@ import android.content.Intent
 import android.os.Handler
 
 import com.jmstudios.redmoon.helper.DismissNotificationRunnable
+import com.jmstudios.redmoon.helper.Logger
+import com.jmstudios.redmoon.manager.BrightnessManager
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.presenter.ScreenFilterPresenter
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Logger
 
 import java.util.Calendar
 
@@ -61,8 +62,7 @@ class BootReceiver : BroadcastReceiver() {
         // dimmed brightness and we need to restore the saved brightness
         // before proceeding.
         if (filterIsOnBeforeReboot && Config.lowerBrightness) {
-            ScreenFilterPresenter.setBrightness(Config.brightness,
-                    Config.automaticBrightness, context)
+            BrightnessManager.setBrightness(Config.brightness, Config.automaticBrightness, context)
         }
 
         TimeToggleChangeReceiver.scheduleNextOnCommand()
@@ -84,7 +84,7 @@ class BootReceiver : BroadcastReceiver() {
             val handler = Handler()
 
             val runnable = DismissNotificationRunnable(context)
-            handler.postDelayed(runnable, (ScreenFilterPresenter.FADE_DURATION_MS + 100).toLong())
+            handler.postDelayed(runnable, (ScreenFilterPresenter.FADE_DURATION_LONG + 100).toLong())
         }
         return
     }

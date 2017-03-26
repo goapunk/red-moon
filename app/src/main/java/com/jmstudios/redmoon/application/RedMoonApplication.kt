@@ -26,7 +26,7 @@ import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.model.ProfilesModel
 import com.jmstudios.redmoon.receiver.TimeToggleChangeReceiver
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Logger
 
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -92,10 +92,10 @@ class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceCha
         // TODO: Allow updating the profile before the related settings without causing bugs
         // Update settings that are based on the profile
         ProfilesModel.getProfile(index).run {
-            Log.i("color=$color, intensity=$intensity, dim=$dim, lb=$lowerBrightness")
+            Log.i("color=$color, intensity=$intensity, dim=$dimLevel, lb=$lowerBrightness")
             Config.color           = color
             Config.intensity       = intensity
-            Config.dim             = dim
+            Config.dimLevel        = dimLevel
             Config.lowerBrightness = lowerBrightness
         }
     }

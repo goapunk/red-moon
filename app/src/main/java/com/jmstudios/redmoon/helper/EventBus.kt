@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2016 Marien Raat <marienraat@riseup.net>
  * Copyright (c) 2017  Stephen Michel <s@smichel.me>
  *
  *  This file is free software: you may copy, redistribute and/or modify it
@@ -15,24 +14,26 @@
  *  You should have received a copy of the GNU General Public License along with
  *  this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jmstudios.redmoon.receiver
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
+package com.jmstudios.redmoon.helper
 
-import com.jmstudios.redmoon.helper.Logger
-import com.jmstudios.redmoon.model.Config
+import org.greenrobot.eventbus.EventBus
+import kotlin.reflect.KClass
 
-class NextProfileCommandReceiver : BroadcastReceiver() {
+/* EventBus uses classes as events. These are the available events to send */
 
-    companion object : Logger()
+object EventBus {
+    interface Event
 
-    override fun onReceive(context: Context, intent: Intent) {
-        Log.i("Next profile requested")
+    private val bus: EventBus
+        get() = EventBus.getDefault()
 
-        // Cycles back to default when it reaches the max
-        val profile = Config.profile + 1
-        Config.profile = if (profile < Config.amountProfiles) profile else 0
-    }
+    fun register  (subscriber: Any) = bus.register  (subscriber)
+    fun unregister(subscriber: Any) = bus.unregister(subscriber)
+
+    fun post        (event: Event) = bus.post             (event)
+    fun postSticky  (event: Event) = bus.postSticky       (event)
+    fun removeSticky(event: Event) = bus.removeStickyEvent(event)
+
+    fun <T: Event>getSticky(eventClass: KClass<T>) = bus.getStickyEvent(eventClass.java)
 }

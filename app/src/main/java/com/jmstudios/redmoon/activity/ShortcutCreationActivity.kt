@@ -22,7 +22,7 @@ import android.content.Intent
 import android.os.Bundle
 
 import com.jmstudios.redmoon.R
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Logger
 
 class ShortcutCreationActivity : Activity() {
 

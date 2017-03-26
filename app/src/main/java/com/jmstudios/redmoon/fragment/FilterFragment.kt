@@ -43,14 +43,13 @@ import android.preference.TwoStatePreference
 import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.event.*
+import com.jmstudios.redmoon.helper.EventBus
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.preference.ProfileSelectorPreference
 import com.jmstudios.redmoon.preference.SeekBarPreference
-import com.jmstudios.redmoon.util.hasWriteSettingsPermission
-import com.jmstudios.redmoon.util.requestWriteSettingsPermission
-import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.helper.Permission
+import com.jmstudios.redmoon.helper.Logger
 
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class FilterFragment : EventPreferenceFragment() {
@@ -70,7 +69,7 @@ class FilterFragment : EventPreferenceFragment() {
         get() = (preferenceScreen.findPreference
                 (getString(R.string.pref_key_intensity)) as SeekBarPreference)
 
-    private val dimPref: SeekBarPreference
+    private val dimLevelPref: SeekBarPreference
         get()= (preferenceScreen.findPreference
                (getString(R.string.pref_key_dim)) as SeekBarPreference)
 
@@ -91,7 +90,7 @@ class FilterFragment : EventPreferenceFragment() {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.filter_preferences)
 
-        if (!hasWriteSettingsPermission) { lowerBrightnessPref.isChecked = false }
+        if (!Permission.WriteSettings.isGranted) { lowerBrightnessPref.isChecked = false }
         updateSecureSuspendSummary()
         updateTimeToggleSummary()
         updateBacklightPrefSummary()
@@ -99,31 +98,37 @@ class FilterFragment : EventPreferenceFragment() {
         lowerBrightnessPref.onPreferenceChangeListener =
                 Preference.OnPreferenceChangeListener { _, newValue ->
                     val checked = newValue as Boolean
-                    if (checked) { requestWriteSettingsPermission(activity) } else { true }
+                    if (checked) Permission.WriteSettings.request(activity) else true
                 }
     }
 
     override fun onResume() {
         Log.i("onResume")
         super.onResume()
-        EventBus.getDefault().register(profileSelectorPref)
+        EventBus.register(profileSelectorPref)
         updateSecureSuspendSummary()
         updateTimeToggleSummary()
     }
 
     override fun onPause() {
-        EventBus.getDefault().unregister(profileSelectorPref)
+        EventBus.unregister(profileSelectorPref)
         super.onPause()
     }
 
     private fun updateTimeToggleSummary() {
-        timeTogglePref.setSummary(if (Config.timeToggle) R.string.text_switch_on
-                                  else R.string.text_switch_off)
+        timeTogglePref.setSummary(if (Config.timeToggle) {
+            R.string.text_switch_on
+        } else {
+            R.string.text_switch_off
+        })
     }
 
     private fun updateSecureSuspendSummary() {
-        secureSuspendPref.setSummary(if (Config.secureSuspend) R.string.text_switch_on
-                                     else R.string.text_switch_off)
+        secureSuspendPref.setSummary(if (Config.secureSuspend) {
+            R.string.text_switch_on
+        } else {
+            R.string.text_switch_off
+        })
     }
 
     private fun updateBacklightPrefSummary() {
@@ -137,11 +142,9 @@ class FilterFragment : EventPreferenceFragment() {
     //region presenter
     @Subscribe
     fun onProfileChanged(event: profileChanged) {
-        Log.i("Profile changed. profile: ${Config.profile}, color: ${Config.color}, intensity: " +
-            "${Config.intensity}, dim: ${Config.dim}, lowerBrightness: ${Config.lowerBrightness}")
-        colorPref.setProgress(Config.color)
+        colorPref    .setProgress(Config.color    )
         intensityPref.setProgress(Config.intensity)
-        dimPref.setProgress(Config.dim)
+        dimLevelPref .setProgress(Config.dimLevel )
         lowerBrightnessPref.isChecked = Config.lowerBrightness
     }
 

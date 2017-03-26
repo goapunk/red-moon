@@ -24,10 +24,10 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.ContextWrapper
 
+import com.jmstudios.redmoon.helper.Logger
 import com.jmstudios.redmoon.service.ScreenFilterService
 import com.jmstudios.redmoon.util.atLeastAPI
 import com.jmstudios.redmoon.util.belowAPI
-import com.jmstudios.redmoon.util.Logger
 
 import java.lang.Thread
 import java.util.TreeMap

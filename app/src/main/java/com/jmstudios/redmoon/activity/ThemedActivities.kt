@@ -6,12 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 
 import com.jmstudios.redmoon.R
+
+import com.jmstudios.redmoon.helper.Logger
+import com.jmstudios.redmoon.helper.Permission
 import com.jmstudios.redmoon.fragment.AboutFragment
 import com.jmstudios.redmoon.fragment.SecureSuspendFragment
 import com.jmstudios.redmoon.fragment.TimeToggleFragment
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.util.Logger
-import com.jmstudios.redmoon.util.onRequestPermissionsResult
 
 abstract class ThemedAppCompatActivity : AppCompatActivity() {
 
@@ -46,7 +47,7 @@ abstract class ThemedAppCompatActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
-        onRequestPermissionsResult(requestCode)
+        Permission.onRequestResult(requestCode)
     }
     companion object : Logger()
 }
