@@ -25,18 +25,19 @@
         app:actionLayout="@layout/switch_layout" />
 
     <item
+        android:id="@+id/menu_dark_theme"
+        android:title="@string/dark_theme"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/show_intro_button"
         android:title="@string/show_intro_text"
         app:showAsAction="never"
         android:icon="@drawable/ic_help_white_24dp"/>
 
     <item
-        android:id="@+id/view_github"
-        android:title="@string/project_page_title"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/email_developer"
-        android:title="@string/email_me_title"
+        android:id="@+id/about_button"
+        android:title="@string/menu_about"
         app:showAsAction="never"/>
 </menu>

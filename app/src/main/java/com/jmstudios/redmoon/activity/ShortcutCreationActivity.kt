@@ -22,12 +22,12 @@ import android.content.Intent
 import android.os.Bundle
 
 import com.jmstudios.redmoon.R
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 class ShortcutCreationActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log("Create ShortcutCreationActivity")
+        Log.i("Create ShortcutCreationActivity")
         super.onCreate(savedInstanceState)
 
         val shortcutIntent = Intent(this, MainActivity::class.java)
@@ -46,4 +46,5 @@ class ShortcutCreationActivity : Activity() {
 
         finish()
     }
+    companion object : Logger()
 }

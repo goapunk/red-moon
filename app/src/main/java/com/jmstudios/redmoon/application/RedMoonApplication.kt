@@ -20,13 +20,15 @@ package com.jmstudios.redmoon.application
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.Log
 
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.event.*
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.model.Config
+import com.jmstudios.redmoon.receiver.TimeToggleChangeReceiver
+import com.jmstudios.redmoon.util.Logger
 
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -37,20 +39,22 @@ class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceCha
         app = this
         super.onCreate()
         //EventBus.builder().addIndex(eventBusIndex()).installDefaultEventBus()
+        EventBus.getDefault().register(this)
         mSharedPrefs.registerOnSharedPreferenceChangeListener(this)
-        if (DEBUG) Log.d(TAG, "Opened Settings change listener")
+        Log.d("Opened Settings change listener")
     }
 
     // Only called in emulated environments. In production, just gets killed.
     override fun onTerminate() {
         mSharedPrefs.unregisterOnSharedPreferenceChangeListener(this)
-        if (DEBUG) Log.d(TAG, "Closed Settings change listener")
+        EventBus.getDefault().unregister(this)
+        Log.d("Closed Settings change listener")
         super.onTerminate()
     }
 
     //region OnSharedPreferenceChangeListener
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String) {
-        Log("onPreferenceChanged: $key")
+        Log.i("onPreferenceChanged: $key")
         EventBus.getDefault().post(when (key) {
             getString(R.string.pref_key_filter_is_on)         -> filterIsOnChanged()
             getString(R.string.pref_key_dim)                  -> dimChanged()
@@ -68,6 +72,7 @@ class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceCha
             getString(R.string.pref_key_sunset_time)          -> sunsetTimeChanged()
             getString(R.string.pref_key_sunrise_time)         -> sunriseTimeChanged()
             getString(R.string.pref_key_secure_suspend)       -> secureSuspendChanged()
+            getString(R.string.pref_key_button_backlight)     -> buttonBacklightChanged()
             else -> return
             /* Preferences for which no Event is posted */
             // getString(R.string.pref_key_brightness_level)
@@ -75,12 +80,38 @@ class RedMoonApplication: Application(), SharedPreferences.OnSharedPreferenceCha
             // getString(R.string.pref_key_dim_buttons)
         })
     }
-
     //endregion
-    companion object {
-        private const val TAG = "RedMoonApplication"
-        private const val DEBUG = true
 
+    // There's probably a better place to do this to keep this class clean
+    // For now it works, though
+    @Subscribe
+    fun onTimeToggleChanged(event: timeToggleChanged) {
+        Log.i("Timer turned ${if (Config.timeToggle) "on" else "off"}")
+        if (Config.timeToggle) {
+            TimeToggleChangeReceiver.rescheduleOnCommand()
+            TimeToggleChangeReceiver.rescheduleOffCommand()
+        } else {
+            TimeToggleChangeReceiver.cancelAlarms()
+        }
+    }
+
+    @Subscribe
+    fun onCustomTurnOnTimeChanged(event: customTurnOnTimeChanged) {
+        TimeToggleChangeReceiver.rescheduleOnCommand()
+    }
+
+    @Subscribe
+    fun onCustomTurnOffTimeChanged(event: customTurnOffTimeChanged) {
+        TimeToggleChangeReceiver.rescheduleOffCommand()
+    }
+
+    @Subscribe
+    fun onLocationChanged(event: locationChanged) {
+        TimeToggleChangeReceiver.rescheduleOffCommand()
+        TimeToggleChangeReceiver.rescheduleOnCommand()
+    }
+
+    companion object : Logger() {
         lateinit var app: RedMoonApplication
     }
 }

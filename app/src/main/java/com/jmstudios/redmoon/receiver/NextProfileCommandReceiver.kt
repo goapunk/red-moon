@@ -23,12 +23,14 @@ import android.content.Intent
 
 import com.jmstudios.redmoon.helper.ProfilesHelper
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 class NextProfileCommandReceiver : BroadcastReceiver() {
 
+    companion object : Logger()
+
     override fun onReceive(context: Context, intent: Intent) {
-        Log("Next profile requested")
+        Log.i("Next profile requested")
 
         // Here we just change the profile (cycles back to default
         // when it reaches the max).

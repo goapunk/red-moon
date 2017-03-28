@@ -42,4 +42,5 @@ import android.app.Notification
 interface ServiceLifeCycleController {
     fun startForeground(id: Int, notification: Notification)
     fun stopForeground(removeNotification: Boolean)
+    fun stopSelf()
 }

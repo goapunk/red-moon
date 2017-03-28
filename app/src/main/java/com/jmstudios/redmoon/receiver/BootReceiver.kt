@@ -40,20 +40,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import android.util.Log
 
 import com.jmstudios.redmoon.helper.DismissNotificationRunnable
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.presenter.ScreenFilterPresenter
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 import java.util.Calendar
 
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log("Boot broadcast received!")
+        Log.i("Boot broadcast received!")
 
         val filterIsOnBeforeReboot = Config.filterIsOn
 
@@ -66,8 +65,8 @@ class BootReceiver : BroadcastReceiver() {
                     Config.automaticBrightness, context)
         }
 
-        TimeToggleChangeReceiver.scheduleNextOnCommand(context)
-        TimeToggleChangeReceiver.scheduleNextOffCommand(context)
+        TimeToggleChangeReceiver.scheduleNextOnCommand()
+        TimeToggleChangeReceiver.scheduleNextOffCommand()
 
         val filterIsOnPredicted = filterIsOnPrediction(filterIsOnBeforeReboot)
         val command = if (filterIsOnPredicted) { ScreenFilterService.Command.ON }
@@ -90,9 +89,7 @@ class BootReceiver : BroadcastReceiver() {
         return
     }
 
-    companion object {
-        private const val TAG = "BootReceiver"
-        private const val DEBUG = false
+    companion object : Logger() {
 
         private fun filterIsOnPrediction(filterIsOnBeforeReboot: Boolean): Boolean {
             if (Config.timeToggle) {
@@ -116,11 +113,9 @@ class BootReceiver : BroadcastReceiver() {
                     while (before(on)) { add(Calendar.DATE, 1) }
                 }
 
-                if (DEBUG) {
-                    Log.d(TAG, "On: $onTime, off: $offTime")
-                    Log.d(TAG, "On DAY_OF_MONTH: " + Integer.toString(on.get(Calendar.DAY_OF_MONTH)))
-                    Log.d(TAG, "Off DAY_OF_MONTH: " + Integer.toString(off.get(Calendar.DAY_OF_MONTH)))
-                }
+                Log.d("On: $onTime, off: $offTime")
+                Log.d("On DAY_OF_MONTH: " + Integer.toString(on.get(Calendar.DAY_OF_MONTH)))
+                Log.d("Off DAY_OF_MONTH: " + Integer.toString(off.get(Calendar.DAY_OF_MONTH)))
 
                 return (now.after(on) && now.before(off))
             } else {

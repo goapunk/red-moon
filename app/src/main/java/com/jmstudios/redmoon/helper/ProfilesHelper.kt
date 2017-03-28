@@ -20,11 +20,11 @@ package com.jmstudios.redmoon.helper
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 import com.jmstudios.redmoon.model.ProfilesModel
 
-object ProfilesHelper {
+object ProfilesHelper : Logger() {
     const val DEFAULT_OPERATIONS_AM = 3
 
     // TODO: Hold a reference instead of getting a new model each time
@@ -32,7 +32,7 @@ object ProfilesHelper {
         get() = ProfilesModel(appContext)
 
     fun getProfileName(profile: Int): String {
-        Log("getProfileName $profile")
+        Log.i("getProfileName $profile")
         if (profile < DEFAULT_OPERATIONS_AM) {
             return appContext.resources.getStringArray(R.array.standard_profiles_array)[profile]
         } else {
@@ -41,7 +41,7 @@ object ProfilesHelper {
     }
 
     fun getProfile(profile: Int): ProfilesModel.Profile {
-        Log("getProfile $profile")
+        Log.i("getProfile $profile")
         val name = getProfileName(profile)
         return  when (profile) {
               // ProfilesModel.Profile(name, color, intensity, dim, lowerBrightness)
@@ -53,12 +53,12 @@ object ProfilesHelper {
     }
 
     fun setProfile(profile: Int) {
-        Log("setProfile: $profile")
+        Log.i("setProfile: $profile")
         // TODO: Allow updating the profile before the related settings without causing bugs
         // Update settings that are based on the profile
         if (profile != 0) {
             getProfile(profile).apply {
-                Log("color=$mColor, intensity=$mIntensity, dim=$mDim, lb=$mLowerBrightness")
+                Log.i("color=$mColor, intensity=$mIntensity, dim=$mDim, lb=$mLowerBrightness")
                 Config.color = mColor
                 Config.intensity = mIntensity
                 Config.dim = mDim
@@ -69,7 +69,7 @@ object ProfilesHelper {
     }
 
     fun addProfile(name: String) {
-        Log("addProfile $name")
+        Log.i("addProfile $name")
         val profile = ProfilesModel.Profile(name,
                                             Config.color,
                                             Config.intensity,
@@ -82,7 +82,7 @@ object ProfilesHelper {
     }
 
     fun removeProfile(profile: Int) {
-        Log("removeProfile $profile")
+        Log.i("removeProfile $profile")
         model.removeProfile(profile - DEFAULT_OPERATIONS_AM)
         updateAmountProfiles()
         setProfile(0)
@@ -90,7 +90,6 @@ object ProfilesHelper {
 
     private fun updateAmountProfiles() {
         Config.amountProfiles = model.profiles.size + DEFAULT_OPERATIONS_AM
-        Log("There are now ${Config.amountProfiles} profiles.")
+        Log.i("There are now ${Config.amountProfiles} profiles.")
     }
-
 }

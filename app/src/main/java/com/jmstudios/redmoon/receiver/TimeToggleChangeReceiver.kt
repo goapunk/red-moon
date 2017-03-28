@@ -24,15 +24,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Handler
-import android.util.Log
 
 import com.jmstudios.redmoon.helper.DismissNotificationRunnable
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.presenter.ScreenFilterPresenter
 import com.jmstudios.redmoon.service.LocationUpdateService
 import com.jmstudios.redmoon.service.ScreenFilterService
+import com.jmstudios.redmoon.util.appContext
 import com.jmstudios.redmoon.util.atLeastAPI
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -41,15 +41,15 @@ import java.util.GregorianCalendar
 class TimeToggleChangeReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log("Alarm received")
+        Log.i("Alarm received")
 
         val turnOn = intent.data.toString() == "turnOnIntent"
 
         val command = if (turnOn) ScreenFilterService.Command.ON
         else ScreenFilterService.Command.OFF
         ScreenFilterService.moveToState(command)
-        cancelAlarm(context, turnOn)
-        scheduleNextCommand(context, turnOn)
+        cancelAlarm(turnOn)
+        scheduleNextCommand(turnOn)
 
         // We want to dismiss the notification if the filter is turned off
         // automatically.
@@ -62,44 +62,39 @@ class TimeToggleChangeReceiver : BroadcastReceiver() {
         val runnable = DismissNotificationRunnable(context)
         handler.postDelayed(runnable, (ScreenFilterPresenter.FADE_DURATION_MS + 100).toLong())
 
-        if (Config.timeToggle && Config.useLocation) {
-            LocationUpdateService.start()
-        }
+        LocationUpdateService.update(foreground = false)
     }
 
-    companion object {
-        private const val TAG = "TimeToggleChange"
-        private const val DEBUG = true
-        private val intent = { ctx: Context -> Intent(ctx, TimeToggleChangeReceiver::class.java) }
+    companion object : Logger() {
+        private val intent: Intent
+            get() = Intent(appContext, TimeToggleChangeReceiver::class.java)
+
+        private val alarmManager: AlarmManager
+            get() = appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // Conveniences
-        val scheduleNextOnCommand = { context: Context -> scheduleNextCommand(context, true) }
-        val scheduleNextOffCommand = { context: Context -> scheduleNextCommand(context, false) }
-        //val cancelTurnOnAlarm = { context: Context -> cancelAlarm(context, true) }
-        //val cancelOffAlarm = { context: Context -> cancelAlarm(context, false) }
-        val rescheduleOnCommand = { context: Context ->
-            cancelAlarm(context, true)
-            scheduleNextCommand(context, true)
+        fun scheduleNextOnCommand() = scheduleNextCommand(true)
+        fun scheduleNextOffCommand() = scheduleNextCommand(false)
+        fun rescheduleOnCommand() {
+            cancelAlarm(true)
+            scheduleNextCommand(true)
         }
-        val rescheduleOffCommand = { context: Context ->
-            cancelAlarm(context, false)
-            scheduleNextCommand(context, false)
+        fun rescheduleOffCommand() {
+            cancelAlarm(false)
+            scheduleNextCommand(false)
         }
-        val cancelAlarms = { context: Context ->
-            cancelAlarm(context, true)
-            cancelAlarm(context, false)
+        fun cancelAlarms() {
+            cancelAlarm(true)
+            cancelAlarm(false)
         }
 
-        private fun scheduleNextCommand(context: Context, turnOn: Boolean) {
+        private fun scheduleNextCommand(turnOn: Boolean) {
             if (Config.timeToggle) {
-                if (DEBUG) {
-                    val state = if (turnOn) "on" else "off"
-                    Log.d(TAG, "Scheduling alarm to turn filter $state")
-                }
+                Log.d("Scheduling alarm to turn filter ${if (turnOn) "on" else "off"}")
                 val time = if (turnOn) { Config.automaticTurnOnTime }
                            else { Config.automaticTurnOffTime }
 
-                val command = intent(context).apply {
+                val command = intent.apply {
                     data = Uri.parse(if (turnOn) "turnOnIntent" else "offIntent")
                     putExtra("turn_on", turnOn)
                 }
@@ -113,10 +108,9 @@ class TimeToggleChangeReceiver : BroadcastReceiver() {
                 now.add(Calendar.SECOND, 1)
                 if (calendar.before(now)) { calendar.add(Calendar.DATE, 1) }
 
-                Log("Scheduling alarm for " + calendar.toString())
+                Log.i("Scheduling alarm for " + calendar.toString())
 
-                val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val pendingIntent = PendingIntent.getBroadcast(context, 0, command, 0)
+                val pendingIntent = PendingIntent.getBroadcast(appContext, 0, command, 0)
 
                 if (atLeastAPI(19)) {
                     alarmManager.setExact(AlarmManager.RTC, calendar.timeInMillis, pendingIntent)
@@ -124,20 +118,16 @@ class TimeToggleChangeReceiver : BroadcastReceiver() {
                     alarmManager.set(AlarmManager.RTC, calendar.timeInMillis, pendingIntent)
                 }
             } else {
-                Log("Tried to schedule alarm, but timer is disabled.")
+                Log.i("Tried to schedule alarm, but timer is disabled.")
             }
         }
 
-        private fun cancelAlarm(context: Context, turnOn: Boolean) {
-            if (DEBUG) {
-                val state = if (turnOn) "on" else "off"
-                Log.d(TAG, "Canceling alarm to turn filter " + state)
+        private fun cancelAlarm(turnOn: Boolean) {
+            Log.d("Canceling alarm to turn filter ${if (turnOn) "on" else "off"}")
+            val command = intent.apply {
+                data = Uri.parse(if (turnOn) "turnOnIntent" else "offIntent")
             }
-            val command = intent(context)
-            command.data = if (turnOn) Uri.parse("turnOnIntent")
-                            else Uri.parse("offIntent")
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, command, 0)
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val pendingIntent = PendingIntent.getBroadcast(appContext, 0, command, 0)
             alarmManager.cancel(pendingIntent)
         }
     }

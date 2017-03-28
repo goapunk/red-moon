@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="app_name">Red Moon</string>
+<resources>
+    <string name="app_name">Red Moon</string>
     <string name="intro_label">Introducción</string>
     <string name="settings">Red Moon</string>
     <string name="show_intro_text">Ver la introducción</string>
@@ -8,7 +9,7 @@
     <string name="resume_action">Reanudar</string>
     <string name="pause_action">Pausar</string>
 
-    <string name="pref_title_appearance">Filtro</string>
+    <string name="pref_title_filter">Filtro</string>
     <string name="time_toggle_activity">Horas de funcionamiento</string>
     <string name="pref_title_time_toggle">Horas de funcionamiento</string>
     <string name="pref_title_startup">Inicio</string>
@@ -21,7 +22,7 @@
     <string name="custom_end_time_title">Pausar a las</string>
     <string name="custom_start_time_title">Reanudar a las</string>
     <string name="location_title">Ubicación</string>
-    <string name="searching_location">Buscando ubicación</string>
+    <string name="snackbar_searching_location">Buscando ubicación</string>
 
     <string name="dark_theme">Tema oscuro</string>
 
@@ -29,13 +30,13 @@
     <string name="email_me_summary">Envíame errores y sugerencias</string>
     <string name="project_page_title">Visita la página del proyecto</string>
     <string name="toast_warning_install">Al activarlo no podrás instalar APKs.</string>
-    <string name="toast_warning_no_location">Activa los servicios de ubicación para actualizar tu posición</string>
+    <string name="snackbar_warning_no_location">Activa los servicios de ubicación para actualizar tu posición</string>
 
     <string name="help_snackbar_text">Activa Red Moon para empezar</string>
 
-    <string name="add_new_profile_dialog_title">Escribe un nombre de perfil</string>
-    <string name="add_new_profile_edit_hint">Nombre del perfil</string>
-    <string name="remove_profile_dialog_title">¿Seguro que quieres borrarlo?</string>
+    <string name="add_new_filter_dialog_title">Escribe un nombre de perfil</string>
+    <string name="add_new_filter_edit_hint">Nombre del perfil</string>
+    <string name="remove_filter_dialog_title">¿Seguro que quieres borrarlo?</string>
     <string name="intro_slide_1_text">Te damos la bienvenida a «Red Moon».</string>
 
     <string name="intro_slide_2_title">Protege tus ojos</string>
@@ -64,8 +65,8 @@
     <string name="intro_slide_2_text">De noche, cuando mirar al teléfono
 daña la vista, puedes utilizar Red Moon para limitar el brillo de tu pantalla.</string>
 
-    <string name="intro_slide_4_text">Para activar Red Moon utiliza el control
- de la esquina superior derecha.</string>
+    <string name="intro_slide_4_text">Utiliza el control de la esquina superior
+derecha para des/activar Red Moon.</string>
 
     <string name="shades_intensity_level">Intensidad</string>
     <string name="shades_dim_level">Atenuar</string>
@@ -76,14 +77,14 @@ por la noche. Red Moon elimina la luz azul de la pantalla para que puedas dormir
     <string name="latitude_short">Latitud</string>
     <string name="longitude_short">Longitud</string>
     <string name="time_toggle_options_array_0">Manual</string>
-    <string name="secure_suspend_activity">Pausar automáticamente</string>
+    <string name="secure_suspend_activity">Pausar en aplicaciones seguras</string>
 
-    <string name="secure_suspend_title">No filtrar aplicaciones seguras</string>
-    <string name="secure_suspend_summary">Algunas características de Android están protegidas contra superposiciones de pantalla y no funcionan con filtros como Red Moon. Te las encontrarás al instalar APKs o conceder permisos en Android 6.0+.
+    <string name="secure_suspend_title">Pausar filtro en aplicaciones seguras</string>
+    <string name="secure_suspend_summary">Algunas características de Android están protegidas contra superposiciones de pantalla y no funcionan debajo de filtros como Red Moon. No podrás confirmar al instalar APKs o conceder permisos en Android 6.0+.
 
-Al activar esta opción Red Moon se pausa momentáneamente si detecta este tipo de actividad y reanuda el filtro al terminar. Así puedes despreocuparte de tener que quitar el filtro de forma manual.
+Al utilizar esta opción Red Moon se pausa momentáneamente si detecta este tipo de actividad y reanuda el filtro al terminar. Así puedes despreocuparte de tener que quitar el filtro de forma manual para tocar botones.
 
-Esta característica puede gastar un poco más de batería y no funcionar del todo bien en algunos dispositivos.</string>
+Puede que esta función gaste un poco más de batería y que no funcione del todo bien en algunos dispositivos.</string>
     <string name="text_switch_on">Activado</string>
     <string name="text_switch_off">Desactivado</string>
     <string name="usage_stats_dialog_title">Permitir recopilar aplicaciones en ejecución</string>
@@ -94,7 +95,7 @@ Red Moon necesita acceder a los datos de uso para saber si la aplicación en pri
     <string name="running_no_warning">En funcionamiento</string>
     <string name="overlay_dialog_title">Superponerse sobre otras aplicaciones</string>
     <string name="off">No</string>
-    <string name="use_location_title">Desfase horario desde ubicación</string>
+    <string name="pref_summaryoff_use_location">Desfase horario desde ubicación</string>
     <string name="action_on">Reanudar</string>
     <string name="action_off">Pausar</string>
 
@@ -103,6 +104,31 @@ Red Moon necesita acceder a los datos de uso para saber si la aplicación en pri
     <string name="write_settings_dialog_message">Activa el permiso en la siguiente pantalla para que Red Moon pueda ajustar el brillo de la pantalla según sea necesario.</string>
 
     <string name="write_settings_dialog_title">Cambiar ajustes del sistema</string>
-    <string name="action_next_profile">Siguiente perfil</string>
+    <string name="action_next_filter">Siguiente perfil</string>
 
+    <string name="menu_about">Acerca de</string>
+    <string name="activity_about">Acerca de Red Moon</string>
+    <string name="pref_title_version">Versión</string>
+
+    <string name="pref_title_integration">Integración con otras aplicaciones</string>
+    <string name="pref_summary_integration">Algunas aplicaciones como LibreTasks o Tasker permiten automatizar tareas. Red Moon envía una notificación global cuando se suspende y reanuda, por lo que esas aplicaciones pueden hacer cosas al cambiar el filtro. Puedes saltarte el siguiente párrafo si no eres desarrollador o no te interesa.
+
+Red Moon emite un «intent» público con la acción `com.jmstudios.redmoon.RED_MOON_TOGGLED`. El «intent» contiene un valor booleano extra con la clave `jmstudios.bundle.key.FILTER_IS_ON`, indicando el estado del filtro.</string>
+    <!-- Currently unused -->
+    <string name="add_new_profile_dialog_title">Escribe un nombre de perfil</string>
+    <string name="add_new_profile_edit_hint">Nombre del perfil</string>
+    <string name="remove_profile_dialog_title">¿Seguro que quieres borrarlo?</string>
+    <string name="action_next_profile">Siguiente perfil</string>
+    <string name="pref_title_appearance">Perfil</string>
+    <string name="searching_location">Buscando ubicación</string>
+    <string name="toast_warning_no_location">Activa los servicios de ubicación para actualizar tu posición</string>
+<string name="pref_title_button_backlight_disclaimer">Inútil en ciertos dispositivos</string>
+    <string name="snackbar_location_updated">Se ha encontrado la ubicación.</string>
+    <string name="pref_button_backlight_entries_array_0">Gestionado por el sistema</string>
+    <string name="pref_button_backlight_entries_array_2">Apagar</string>
+
+    <string name="pref_button_backlight_entries_array_1">Filtrar igual que la pantalla</string>
+    <string name="pref_title_button_backlight">Botones retroiluminados</string>
+
+    <string name="pref_title_use_location">Reanudar con la puesta de sol</string>
     </resources>

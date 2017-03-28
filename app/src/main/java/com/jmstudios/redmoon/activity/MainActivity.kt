@@ -37,7 +37,6 @@
 package com.jmstudios.redmoon.activity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -47,15 +46,21 @@ import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.fragment.FilterFragment
-import com.jmstudios.redmoon.util.requestOverlayPermission
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
+import com.jmstudios.redmoon.util.handleUpgrades
+import com.jmstudios.redmoon.util.requestOverlayPermission
 
+import de.cketti.library.changelog.ChangeLog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : ThemedAppCompatActivity() {
+
+    companion object : Logger() {
+        const val EXTRA_FROM_SHORTCUT_BOOL = "com.jmstudios.redmoon.activity.MainActivity.EXTRA_FROM_SHORTCUT_BOOL"
+    }
 
     override val fragment = FilterFragment()
     override val tag = "jmstudios.fragment.tag.FILTER"
@@ -63,14 +68,17 @@ class MainActivity : ThemedAppCompatActivity() {
     lateinit private var mSwitch : Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        handleUpgrades()
         val intent = intent
-        Log("Got intent")
+        Log.i("Got intent")
         val fromShortcut = intent.getBooleanExtra(EXTRA_FROM_SHORTCUT_BOOL, false)
         if (fromShortcut) { toggleAndFinish() }
 
         super.onCreate(savedInstanceState)
         if (!Config.introShown) { startIntro() }
+        ChangeLog(this).run { if (isFirstRun) logDialog.show() }
 
+        EventBus.getDefault().postSticky(mainUI(isOpen = true))
         // The preview will appear faster if we don't have to start the service
         ScreenFilterService.start()
     }
@@ -78,11 +86,14 @@ class MainActivity : ThemedAppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_activity_menu, menu)
 
+        menu.findItem(R.id.menu_dark_theme).isChecked = Config.darkThemeFlag
+
         mSwitch = (menu.findItem(R.id.screen_filter_switch).actionView as Switch).apply {
             isChecked = Config.filterIsOn
             setOnClickListener {
                 val state = if (mSwitch.isChecked) { ScreenFilterService.Command.ON }
                             else { ScreenFilterService.Command.OFF }
+                Log.i("Toggling $state via switch")
                 ScreenFilterService.moveToState(state)
             }
         }
@@ -103,16 +114,14 @@ class MainActivity : ThemedAppCompatActivity() {
     }
 
     override fun onDestroy() {
-        // Really we want to post an eventbus event, "uiClosed"
-        // So the service can turn itself off if the filter is paused
-        /* ScreenFilterService.stop() */
+        EventBus.getDefault().postSticky(mainUI(isOpen = false))
         super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {
         val fromShortcut = intent.getBooleanExtra(EXTRA_FROM_SHORTCUT_BOOL, false)
         if (fromShortcut) { toggleAndFinish() }
-        Log("onNewIntent")
+        Log.i("onNewIntent")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -120,20 +129,18 @@ class MainActivity : ThemedAppCompatActivity() {
         when (item.itemId) {
             R.id.show_intro_button -> {
                 startIntro()
-                return true
             }
-            R.id.view_github -> {
-                val github = resources.getString(R.string.project_page_url)
-                val projectIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(github))
-                startActivity(projectIntent)
+            R.id.about_button -> {
+                val aboutIntent = Intent(this, AboutActivity::class.java)
+                startActivity(aboutIntent)
             }
-            R.id.email_developer -> {
-                val email = resources.getString(R.string.contact_email_adress)
-                val emailIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(email))
-                startActivity(emailIntent)
+            R.id.menu_dark_theme -> {
+                Config.darkThemeFlag = !Config.darkThemeFlag
+                recreate()
             }
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun startIntro() {
@@ -156,9 +163,5 @@ class MainActivity : ThemedAppCompatActivity() {
     fun onOverlayPermissionDenied(event: overlayPermissionDenied) {
         mSwitch.isChecked = false
         requestOverlayPermission(this)
-    }
-
-    companion object {
-        const val EXTRA_FROM_SHORTCUT_BOOL = "com.jmstudios.redmoon.activity.MainActivity.EXTRA_FROM_SHORTCUT_BOOL"
     }
 }

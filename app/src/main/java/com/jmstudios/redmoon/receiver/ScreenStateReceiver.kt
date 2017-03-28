@@ -21,9 +21,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 class ScreenStateReceiver(private val mListener: ScreenStateReceiver.ScreenStateListener?) : BroadcastReceiver() {
+
+    companion object : Logger()
 
     interface ScreenStateListener {
         fun onScreenTurnedOn()
@@ -31,14 +33,14 @@ class ScreenStateReceiver(private val mListener: ScreenStateReceiver.ScreenState
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log("Intent received")
+        Log.i("Intent received")
 
         if (Intent.ACTION_SCREEN_ON == intent.action) {
-            Log("Screen turned on")
+            Log.i("Screen turned on")
 
             mListener?.onScreenTurnedOn()
         } else if (Intent.ACTION_SCREEN_OFF == intent.action) {
-            Log("Screen turned off")
+            Log.i("Screen turned off")
 
             mListener?.onScreenTurnedOff()
         }

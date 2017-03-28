@@ -18,12 +18,12 @@
 package com.jmstudios.redmoon.model
 
 import android.content.Context
-import android.util.Log
+import android.content.SharedPreferences
 
 import java.util.ArrayList
 import org.json.JSONObject
 
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 /**
  * This class manages the SharedPreference that store all custom
@@ -44,41 +44,41 @@ class ProfilesModel(context: Context) {
         private set
 
     init {
-        Log("Creating ProfilesModel")
+        Log.i("Creating ProfilesModel")
         val mPrefsContentsMap = mSharedPrefs.all
         profiles = ArrayList<Profile>()
 
         val amProfiles = mPrefsContentsMap.entries.size
-        if (DEBUG) Log.d(TAG, "Allocating $amProfiles profiles")
+        Log.d("Allocating $amProfiles profiles")
         profiles.ensureCapacity(amProfiles)
 
         for ((key, value) in mPrefsContentsMap) {
-            if (DEBUG) Log.d(TAG, "Parsing key: $key")
+            Log.d("Parsing key: $key")
             val i = Integer.parseInt(key)
             profiles.add(i, parseProfile(value as String))
         }
     }
 
     fun addProfile(profile: Profile) {
-        Log("addProfile ${profile.name}; Current Size: ${profiles.size}")
+        Log.i("addProfile ${profile.mName}; Current Size: ${profiles.size}")
         profiles.add(profile)
         updateSharedPreferences()
     }
 
     fun getProfile(index: Int): Profile {
         val p = profiles[index]
-        Log("getProfile $index of ${profiles.size}, ${p.name}")
+        Log.i("getProfile $index of ${profiles.size}, ${p.mName}")
         return p
     }
 
     fun removeProfile(index: Int) {
-        Log("removeProfile $index")
+        Log.i("removeProfile $index")
         profiles.removeAt(index)
         updateSharedPreferences()
     }
 
     private fun parseProfile(entry: String): Profile {
-        Log("ParseProfile: $entry", false)
+        // Log.i("ParseProfile: $entry")
         val json = JSONObject(entry)
         val name = json.optString(KEY_NAME)
         val color = json.optInt(KEY_COLOR)
@@ -89,17 +89,17 @@ class ProfilesModel(context: Context) {
     }
 
     private fun updateSharedPreferences() {
-        Log("Updating SharedPreferences")
+        Log.i("Updating SharedPreferences")
         val editor = mSharedPrefs.edit()
         editor.clear()
 
         for ((i, profile) in profiles.withIndex()) {
-            Log("Storing profile $i, ${profile.mName}")
+            Log.i("Storing profile $i, ${profile.mName}")
             editor.putString(Integer.toString(i), profile.values)
         }
 
         editor.apply()
-        if (DEBUG) Log.d(TAG, "Done updating SharedPreferences")
+        Log.d("Done updating SharedPreferences")
     }
 
     class Profile(var mName: String,
@@ -120,7 +120,7 @@ class ProfilesModel(context: Context) {
             }
     }
 
-    companion object {
+    companion object : Logger() {
         private const val preferenceName = "com.jmstudios.redmoon.PROFILES_PREFERENCE"
         private const val mode = Context.MODE_PRIVATE
 
@@ -129,8 +129,5 @@ class ProfilesModel(context: Context) {
         private const val KEY_INTENSITY = "intensity"
         private const val KEY_DIM = "dim"
         private const val KEY_LOWER_BRIGHTNESS = "lower-brightness"
-
-        private const val TAG = "ProfilesModel"
-        private const val DEBUG = true
     }
 }

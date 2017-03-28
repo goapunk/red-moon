@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="pref_title_appearance">المُرشح</string>
+<resources>
+    <string name="pref_title_filter">المُرشح</string>
     <string name="app_name">القمر الأحمر</string>
     <string name="shortcut_activity">تفعيل القمر الأحمر</string>
     <string name="running">مٌفعل. قم بإيقافه لتثبيت التطبيقات</string>
@@ -8,7 +9,7 @@
     <string name="pause_action">إيقاف</string>
 
     <string name="intro_label">المقدمة</string>
-    <string name="show_intro_text">إظهار المقدمة</string>
+    <string name="show_intro_text">إعادة تشغيل المقدمة</string>
 
     <string name="pref_title_startup">أبدء</string>
     <string name="pref_title_other">آخر</string>
@@ -24,10 +25,10 @@
     <string name="custom_start_time_title">الإستئناف عند</string>
     <string name="custom_end_time_title">الإيقاف عند</string>
     <string name="location_title">الموقع</string>
-    <string name="location_not_set">غير مُدخل</string>
+    <string name="location_not_set">الموقع غير مُحدد</string>
     <string name="latitude_short">خط العرض</string>
     <string name="longitude_short">خط الطول</string>
-    <string name="searching_location">البحث عن الموقع</string>
+    <string name="snackbar_searching_location">البحث عن الموقع</string>
 
     <string name="dark_theme">الوضع الليلي</string>
 
@@ -35,19 +36,19 @@
     <string name="email_me_summary">راسلني للإبلاغ عن العلل أو الإقتراحات</string>
     <string name="project_page_title">زيارة صفحة المشروع</string>
     <string name="project_page_summary">للعثور على مزيد من المعلومات, وتقييم الخدمة والمشاركة</string>
-    <string name="toast_warning_install">لن تتمكن من تثبيت ملفات APK في حين عمل الفلتر.</string>
-    <string name="toast_warning_no_location">قم بتفعيل خدمات الموقع لتحديث موقعك</string>
+    <string name="toast_warning_install">لن تتمكن من تثبيت ملفات APK في حين عمل التطبيق.</string>
+    <string name="snackbar_warning_no_location">قم بتفعيل خدمات الموقع لتحديث موقعك</string>
 
     <string name="help_snackbar_text">قم بضغط الزر لتفعيل التطبيق</string>
 
-    <string name="add_new_profile_dialog_title">قم بإدخال اسم الوضع</string>
-    <string name="add_new_profile_edit_hint">إسم الوضع</string>
-    <string name="remove_profile_dialog_title">هل تريد حذف هذا الوضع؟</string>
+    <string name="add_new_filter_dialog_title">قم بإدخال اسم الوضع</string>
+    <string name="add_new_filter_edit_hint">إسم الوضع</string>
+    <string name="remove_filter_dialog_title">هل تريد حذف هذا الوضع؟</string>
     <string name="set_dialog">وضع</string>
     <string name="ok_dialog">موافق</string>
     <string name="cancel_dialog">إلغاء</string>
 
-    <string name="toggle_shortcut_title">تفعيل الفلتر</string>
+    <string name="toggle_shortcut_title">تفعيل التطبيق</string>
 
     <string name="intro_slide_1_title">اهلاً بك!</string>
     <string name="intro_slide_1_text">اهلاً بك في التطبيق!</string>
@@ -63,7 +64,7 @@
 النوم بسهولة.</string>
 
     <string name="intro_slide_4_title">لنبدأ!</string>
-    <string name="intro_slide_4_text">لتمكين التطبيق, قم بالضغط على
+    <string name="intro_slide_4_text">لتمكين أو ايقاف التطبيق, قم بالضغط على
 المُبدل في الزاوية اليمنى العليا.</string>
 
     <string name="standard_profiles_array_0">مخصص</string>
@@ -77,7 +78,7 @@
     <string name="settings">القمر الأحمر</string>
     <string name="time_toggle_activity">عدد الترشيح</string>
     <string name="pref_title_time_toggle">عدد الترشيح</string>
-    <string name="secure_suspend_activity">الإيقاف التلقائي</string>
+    <string name="secure_suspend_activity">الإيقاف في التطبيقات المحمية</string>
 
     <string name="secure_suspend_title">إيقاف المرشح تلقائياً في التطبيقات الآمنة</string>
     <string name="secure_suspend_summary">بعض مميزات الأندرويد تقوم بمنع تراكب الشاشة ولن تعمل عندما يكون التطبيق مفعل. على سبيل المثال تثبيت التطبيقات الخارجية APK أو إعطاء الصلاحيات في Android 6.0+.
@@ -87,10 +88,49 @@
 هذه الميزة قد تقوم بتغيير طفيف لمدى عمر بطارية هاتفك. وعلاوة على ذلك هذه الميزة قد لا تعمل على جميع الأجهزة.</string>
     <string name="text_switch_on">مُفعل</string>
     <string name="text_switch_off">مُغلق</string>
-    <string name="usage_stats_dialog_title">السماح بإمكانية الوصول</string>
+    <string name="usage_stats_dialog_title">إمكانية الوصول</string>
     <string name="usage_stats_dialog_message">السماح للتطبيق بحالة إمكانية الوصول في النافذة القادمة لتفعيل هذه الخاصية.
 
 التطبيق يحتاج إمكانية الوصول لرؤية على أي تطبيق تعمل لكي يقوم بإيقاف المرشح في التطبيقات الآمنة. التطبيق سيستخدم هذه البيانات فقط لإيقاف المرشح عند الحاجة.</string>
 
     <string name="running_no_warning">مُفعل</string>
+    <!-- Currently unused -->
+    <string name="add_new_profile_dialog_title">قم بإدخال اسم الوضع</string>
+    <string name="add_new_profile_edit_hint">إسم الوضع</string>
+    <string name="remove_profile_dialog_title">هل تريد حذف هذا الوضع؟</string>
+    <string name="pref_title_appearance">الملف</string>
+    <string name="searching_location">البحث عن الموقع</string>
+    <string name="toast_warning_no_location">قم بتفعيل خدمات الموقع لتحديث موقعك</string>
+<string name="menu_about">حول</string>
+    <string name="activity_about">حول التطبيق</string>
+    <string name="overlay_dialog_title">الظهور على التطبيقات الاخرى</string>
+    <string name="overlay_dialog_message">قم بإعطاء صلاحية الظهور على التطبيقات الاخرى في الشاشة القادمة للسماح للتطبيق بالعمل.</string>
+
+    <string name="write_settings_dialog_title">تعديل إعدادات النظام</string>
+    <string name="write_settings_dialog_message">السماح بتعديل إعدادات
+النظام في الشاشة القادمة للسماح للتطبيق بتغيير
+مستوى سطوح الشاشة.</string>
+
+    <string name="off">إيقاف</string>
+    <string name="action_on">تشغيل</string>
+    <string name="action_off">إيقاف</string>
+    <string name="action_next_filter">الفلتر التالي</string>
+
+    <string name="pref_title_button_backlight_disclaimer">قد لا تتأثر بعض الاجهزة</string>
+    <string name="pref_title_button_backlight">زر الإضاءة الخلفية للجهاز</string>
+
+    <string name="pref_title_use_location">العدد عند الشروق</string>
+    <string name="pref_summaryoff_use_location">استنادًا إلى موقعك</string>
+    <string name="pref_title_integration">التكامل مع التطبيقات الأخرى</string>
+    <string name="pref_summary_integration">بعض التطبيقات, مثل LibreTasks أو Tasker, تُمكنك من عمل مهام تلقائية عند حدوث أحداث معينة. التطبيق يرسل تنبيه عام عند تشغيله او ايقافه, بحيث يمكن لتلك التطبيقات الإستجابة. إذا كنت لا تستعمل او تطور أحد هذه التطبيقات, بإمكانك تجاهل الفقرة التالية.
+
+التطبيق يبث public intent بواسطة الحدث`com.jmstudios.redmoon.RED_MOON_TOGGLED`. والـ intent تحتوي على boolean إضافي في المفتاح `jmstudios.bundle.key.FILTER_IS_ON`, مما يدل على ما إذا كان التطبيق مفعل أو مغلق.</string>
+    <string name="pref_title_version">الإصدار</string>
+
+    <string name="snackbar_location_updated">تم العثور على موقع!</string>
+    <string name="pref_button_backlight_entries_array_0">تم إدارة النظام</string>
+    <string name="pref_button_backlight_entries_array_1">نسبة الخفوت في المرشح</string>
+    <string name="pref_button_backlight_entries_array_2">إيقاف</string>
+
+    <string name="action_next_profile">الإعداد التالي</string>
     </resources>

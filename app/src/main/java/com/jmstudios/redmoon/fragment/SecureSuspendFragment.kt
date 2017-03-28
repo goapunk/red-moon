@@ -28,7 +28,7 @@ import android.provider.Settings
 import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.thread.CurrentAppMonitoringThread
 import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 class SecureSuspendFragment : PreferenceFragment() {
 
@@ -40,7 +40,7 @@ class SecureSuspendFragment : PreferenceFragment() {
                 (getString(R.string.pref_key_secure_suspend)) as SwitchPreference)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log("onCreate()")
+        Log.i("onCreate()")
         super.onCreate(savedInstanceState)
 
         addPreferencesFromResource(R.xml.secure_suspend_preferences)
@@ -70,19 +70,17 @@ class SecureSuspendFragment : PreferenceFragment() {
 
     // TODO: Fix on API < 21
     private fun createEnableUsageStatsDialog() {
-        val builder = AlertDialog.Builder(activity)
-
-        builder.setMessage(R.string.usage_stats_dialog_message)
-               .setTitle(R.string.usage_stats_dialog_title)
-               .setPositiveButton(R.string.ok_dialog) { _, _ ->
-                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                    startActivityForResult(intent, RESULT_USAGE_ACCESS)
-        }
-
-        builder.show()
+        AlertDialog.Builder(activity).apply {
+            setMessage(R.string.usage_stats_dialog_message)
+            setTitle(R.string.usage_stats_dialog_title)
+            setPositiveButton(R.string.ok_dialog) { _, _ ->
+                val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                startActivityForResult(intent, RESULT_USAGE_ACCESS)
+            }
+        }.show()
     }
 
-    companion object {
+    companion object : Logger() {
         const val RESULT_USAGE_ACCESS = 1
     }
 }

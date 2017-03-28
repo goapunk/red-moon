@@ -35,13 +35,8 @@
 
     <SwitchPreference
         android:key="@string/pref_key_use_location"
-        android:title="@string/use_location_title"
+        android:title="@string/pref_title_use_location"
+        android:summaryOff="@string/pref_summaryoff_use_location"
         android:dependency="@string/pref_key_time_toggle"
         android:defaultValue="false" />
-
-    <Preference
-        android:key="@string/pref_key_location"
-        android:title="@string/location_title"
-        android:dependency="@string/pref_key_use_location" />
-
 </PreferenceScreen>

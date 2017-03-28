@@ -111,7 +111,7 @@
             android:theme="@style/AppTheme" >
 
             <intent-filter>
-                <action android:name="com.jmstudios.redmoon.activity.TimeToggleActivity" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -123,16 +123,22 @@
             android:theme="@style/AppTheme" >
 
             <intent-filter>
-                <action android:name="com.jmstudios.redmoon.activity.SecureSuspendActivity" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/activity_about"
+            android:parentActivityName="com.jmstudios.redmoon.activity.MainActivity"
+            android:theme="@style/AppTheme" />
+
         <service android:name="com.jmstudios.redmoon.service.LocationUpdateService" />
         <service android:name="com.jmstudios.redmoon.service.ScreenFilterService" />
         <service
-            android:name=".receiver.TileReciever"
-            android:icon="@drawable/toggle_icon"
+            android:name=".receiver.TileReceiver"
+            android:icon="@drawable/notification_icon_half_moon"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

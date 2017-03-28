@@ -24,7 +24,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.preference.Preference
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
@@ -34,10 +33,12 @@ import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.model.Config
 import com.jmstudios.redmoon.service.ScreenFilterService
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 import com.jmstudios.redmoon.view.ScreenFilterView
 
 abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), SeekBar.OnSeekBarChangeListener {
+
+    companion object : Logger()
 
     lateinit var mSeekBar: SeekBar
     protected var mProgress: Int = 0
@@ -48,7 +49,6 @@ abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Prefer
     abstract val colorFilter: PorterDuffColorFilter
     abstract val progress: Int
     abstract val suffix: String
-    abstract val TAG: String
 
     init {
         layoutResource = R.layout.preference_seekbar
@@ -72,7 +72,7 @@ abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Prefer
     }
 
     override fun onBindView(view: View) {
-        Log("onBindView")
+        Log.i("onBindView")
         super.onBindView(view)
         mView = view
         mSeekBar = view.findViewById(R.id.seekbar) as SeekBar
@@ -84,7 +84,7 @@ abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Prefer
 
     //region OnSeekBarChangedListener
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        Log("onSeekbarProgressChanged, storing value")
+        Log.i("onSeekbarProgressChanged, storing value")
         mProgress = progress
         persistInt(mProgress)
         updateMoonIcon()
@@ -92,12 +92,12 @@ abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Prefer
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar) {
-        Log.d(TAG, "Touch down on a seek bar")
+        Log.d("Touch down on a seek bar")
         ScreenFilterService.moveToState(ScreenFilterService.Command.SHOW_PREVIEW)
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        Log.d(TAG, "Released a seek bar")
+        Log.d("Released a seek bar")
         ScreenFilterService.moveToState(ScreenFilterService.Command.HIDE_PREVIEW)
     }
     //end region
@@ -117,7 +117,10 @@ abstract class SeekBarPreference(context: Context, attrs: AttributeSet) : Prefer
 
 class ColorSeekBarPreference(context: Context, attrs: AttributeSet) : SeekBarPreference(context, attrs) {
 
-    override val TAG = "ColorSeekBarPreference"
+    // TODO: Get the default value from the XML and handle it in the parent class
+    companion object : Logger() {
+        const val DEFAULT_VALUE = 10
+    }
 
     // Changes to DEFAULT_VALUE should be reflected in preferences.xml
     override val DEFAULT_VALUE = 10
@@ -131,21 +134,19 @@ class ColorSeekBarPreference(context: Context, attrs: AttributeSet) : SeekBarPre
 
     override val progress: Int
         get() = ScreenFilterView.getColorTempFromProgress(mProgress)
-
-    // TODO: Get the default value from the XML and handle it in the parent class
-    companion object {
-        val DEFAULT_VALUE = 10
-    }
 }
 
 class IntensitySeekBarPreference(context: Context, attrs: AttributeSet) : SeekBarPreference(context, attrs) {
 
-    override val TAG = "IntensitySeekBarPref"
+    // TODO: Get the default value from the XML and handle it in the parent class
+    companion object : Logger() {
+        const val DEFAULT_VALUE = 50
+    }
 
     // Changes to DEFAULT_VALUE should be reflected in preferences.xml
     override val DEFAULT_VALUE = 50
     override val suffix = "%"
-        
+
     override val colorFilter: PorterDuffColorFilter
         get() {
             val color = ScreenFilterView.getIntensityColor(mProgress, Config.color)
@@ -154,17 +155,15 @@ class IntensitySeekBarPreference(context: Context, attrs: AttributeSet) : SeekBa
 
     override val progress: Int
         get() = mProgress
-
-    // TODO: Get the default value from the XML and handle it in the parent class
-    companion object {
-        val DEFAULT_VALUE = 50
-    }
 }
 
 
 class DimSeekBarPreference(context: Context, attrs: AttributeSet) : SeekBarPreference(context, attrs) {
 
-    override val TAG = "DimSeekBarPreference"
+    // TODO: Get the default value from the XML and handle it in the parent class
+    companion object : Logger() {
+        const val DEFAULT_VALUE = 50
+    }
 
     // Changes to DEFAULT_VALUE should be reflected in preferences.xml
     override val DEFAULT_VALUE = 50
@@ -179,9 +178,4 @@ class DimSeekBarPreference(context: Context, attrs: AttributeSet) : SeekBarPrefe
 
     override val progress: Int
         get() = (mProgress.toFloat() * ScreenFilterView.DIM_MAX_ALPHA).toInt()
-
-    // TODO: Get the default value from the XML and handle it in the parent class
-    companion object {
-        val DEFAULT_VALUE = 50
-    }
 }

@@ -43,35 +43,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 
+import com.jmstudios.redmoon.BuildConfig
 import com.jmstudios.redmoon.R
 
 import com.jmstudios.redmoon.application.RedMoonApplication
 import com.jmstudios.redmoon.event.locationPermissionDialogClosed
+import com.jmstudios.redmoon.model.Config
 
 import org.greenrobot.eventbus.EventBus
 
 val appContext = RedMoonApplication.app
 
-private const val DEBUG = true
-
-/**
- * This is a kotlin extension. It adds a Log method that any class can call
- * as its own member. We use it to set the tag as the caller's class name.
- * *
- * @param message What to print.
- * *
- * @param enabled Optional: Whether to print this log. By default, it will obey
- * *                the default global setting from the DEBUG constant above.
- */
-fun Any.Log(message: String, enabled: Boolean = DEBUG) {
-    if (enabled) { Log.i(this::class.java.simpleName, message) }
-}
+fun getString(resId: Int): String = appContext.getString(resId)
+fun getColor(resId: Int): Int = ContextCompat.getColor(appContext, resId)
 
 val atLeastAPI: (Int) -> Boolean = { it <= android.os.Build.VERSION.SDK_INT }
 val belowAPI: (Int) -> Boolean = { !atLeastAPI(it) }
@@ -130,4 +121,31 @@ fun onRequestPermissionsResult(requestCode: Int) {
     if (requestCode == LOCATION_PERMISSION_REQ_CODE) {
         EventBus.getDefault().post(locationPermissionDialogClosed())
     }
+}
+
+fun handleUpgrades() {
+    tailrec fun upgradeFrom(version: Int): Unit = when (version) {
+        BuildConfig.VERSION_CODE -> {
+            Config.fromVersionCode = version
+        } in 0..25 -> {
+            upgradeToggleModePreferences()
+            upgradeFrom(26)
+        } in 26..27 -> {
+            upgradeFrom(28)
+        } else -> {
+            Log.e("handleUpgrades", "Didn't catch upgrades from version $version")
+            upgradeFrom(version+1)
+        }
+    }
+
+    upgradeFrom(if (Config.introShown) Config.fromVersionCode else BuildConfig.VERSION_CODE)
+}
+
+private fun upgradeToggleModePreferences() {
+    val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(appContext)
+    val timerKey = appContext.getString(R.string.pref_key_time_toggle)
+    val currentToggleMode: String = sharedPrefs.getString(timerKey, "manual")
+    sharedPrefs.edit().remove(timerKey).apply()
+    Config.timeToggle = currentToggleMode != "manual"
+    Config.useLocation = currentToggleMode == "sun"
 }

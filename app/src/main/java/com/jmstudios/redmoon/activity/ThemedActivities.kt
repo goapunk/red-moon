@@ -6,10 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 
 import com.jmstudios.redmoon.R
+import com.jmstudios.redmoon.fragment.AboutFragment
 import com.jmstudios.redmoon.fragment.SecureSuspendFragment
 import com.jmstudios.redmoon.fragment.TimeToggleFragment
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 import com.jmstudios.redmoon.util.onRequestPermissionsResult
 
 abstract class ThemedAppCompatActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ abstract class ThemedAppCompatActivity : AppCompatActivity() {
 
         // Only create and attach a new fragment on the first Activity creation.
         if (savedInstanceState == null) {
-            Log("onCreate - First creation")
+            Log.i("onCreate - First creation")
             fragmentManager.beginTransaction()
                            .replace(R.id.fragment_container, fragment, tag)
                            .commit()
@@ -38,6 +39,7 @@ abstract class ThemedAppCompatActivity : AppCompatActivity() {
                 finish()
                 return true
             }
+
         }
         return super.onOptionsItemSelected(item)
     }
@@ -46,6 +48,7 @@ abstract class ThemedAppCompatActivity : AppCompatActivity() {
                                             grantResults: IntArray) {
         onRequestPermissionsResult(requestCode)
     }
+    companion object : Logger()
 }
 
 // One subclass per subscreen
@@ -58,4 +61,9 @@ class SecureSuspendActivity : ThemedAppCompatActivity() {
 class TimeToggleActivity : ThemedAppCompatActivity() {
     override val fragment = TimeToggleFragment()
     override val tag = "jmstudios.fragment.tag.TIME_TOGGLE"
+}
+
+class AboutActivity : ThemedAppCompatActivity() {
+    override val fragment = AboutFragment()
+    override val tag = "jmstudios.fragment.tag.ABOUT"
 }

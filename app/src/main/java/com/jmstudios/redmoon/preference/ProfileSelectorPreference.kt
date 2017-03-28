@@ -36,7 +36,7 @@ import com.jmstudios.redmoon.R
 import com.jmstudios.redmoon.event.*
 import com.jmstudios.redmoon.helper.ProfilesHelper
 import com.jmstudios.redmoon.model.Config
-import com.jmstudios.redmoon.util.Log
+import com.jmstudios.redmoon.util.Logger
 
 import org.greenrobot.eventbus.Subscribe
 
@@ -73,7 +73,7 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
     }
 
     override fun onBindView(view: View) {
-        Log("onBindView")
+        Log.i("onBindView")
         super.onBindView(view)
 
         mView = view
@@ -87,7 +87,7 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
     }
 
     private fun initLayout() {
-        Log("Starting initLayout")
+        Log.i("Starting initLayout")
         mArrayAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item)
         mArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -102,12 +102,12 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
 
     private fun updateButtonSetup() {
         if (Config.profile > ProfilesHelper.DEFAULT_OPERATIONS_AM - 1) {
-            Log("Setting remove button")
+            Log.i("Setting remove button")
             mProfileActionButton.text = context.resources.getString(R.string.button_remove_profile)
             mProfileActionButton.setOnClickListener { openRemoveProfileDialog() }
 
         } else {
-            Log("Setting add button")
+            Log.i("Setting add button")
             mProfileActionButton.text = context.resources.getString(R.string.button_add_profile)
             mProfileActionButton.setOnClickListener { openAddNewProfileDialog() }
         }
@@ -115,7 +115,7 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
 
     override fun onItemSelected(parent: AdapterView<*>, view: View,
                                 pos: Int, id: Long) {
-        Log("onItemSelected: $pos")
+        Log.i("Item $pos selected")
         ProfilesHelper.setProfile(pos)
         updateButtonSetup()
     }
@@ -165,7 +165,7 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
     //region presenter
     @Subscribe
     fun onProfileChanged(event: profileChanged) {
-        Log("onProfileChanged")
+        Log.i("onProfileChanged")
         val pos = Config.profile
         mProfileSpinner.setSelection(pos)
 
@@ -186,30 +186,30 @@ class ProfileSelectorPreference(mContext: Context, attrs: AttributeSet) : Prefer
 
     @Subscribe
     fun onDimChanged(event: dimChanged) {
-        Log("onDimChanged")
+        Log.i("onDimChanged")
         if (Config.dim != currentDim) ProfilesHelper.setProfile(0)
     }
 
     @Subscribe
     fun onIntensityChanged(event: intensityChanged) {
-        Log("onIntensityChanged")
+        Log.i("onIntensityChanged")
         if (Config.intensity != currentIntensity) ProfilesHelper.setProfile(0)
     }
 
     @Subscribe
     fun onColorChanged(event: colorChanged) {
-        Log("onColorChanged")
+        Log.i("onColorChanged")
         if (Config.color != currentColor) ProfilesHelper.setProfile(0)
     }
 
     @Subscribe
     fun onLowerBrightnessChanged(event: lowerBrightnessChanged) {
-        Log("onLowerBrightnessChanged")
+        Log.i("onLowerBrightnessChanged")
         if (Config.lowerBrightness != currentLowerBrightness) { ProfilesHelper.setProfile(0) }
     }
     //endregion
 
-    companion object {
+    companion object : Logger() {
         const val DEFAULT_VALUE = 1
     }
 }

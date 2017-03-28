@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="app_name">Red Moon</string>
+<resources>
+    <string name="app_name">Red Moon</string>
     <string name="settings">Red Moon</string>
     <string name="shortcut_activity">Włącznik Red Moon</string>
 
     <string name="running">Uruchomiono. Zatrzymaj aby instalować aplikacje</string>
     <string name="paused">Wstrzymano</string>
 
-    <string name="pref_title_appearance">Profil</string>
+    <string name="pref_title_filter">Profil</string>
     <string name="time_toggle_activity">Czas filtrowania</string>
     <string name="pref_title_time_toggle">Czas filtrowania</string>
     <string name="pref_title_startup">Uruchamianie</string>
@@ -23,10 +24,10 @@
     <string name="custom_start_time_title">Wznawiaj o</string>
     <string name="custom_end_time_title">Zatrzymuj o</string>
     <string name="location_title">Lokalizacja</string>
-    <string name="location_not_set">Nie ustawiono</string>
+    <string name="location_not_set">Nie ustawiono lokalizacji</string>
     <string name="latitude_short">Szer.</string>
     <string name="longitude_short">Dł.</string>
-    <string name="searching_location">Szukanie lokalizacji</string>
+    <string name="snackbar_searching_location">Szukanie lokalizacji</string>
 
     <string name="dark_theme">Ciemny motyw</string>
 
@@ -35,13 +36,13 @@
     <string name="project_page_title">Odwiedź stronę projektu</string>
     <string name="project_page_summary">Znajdź więcej informacji, zostaw opinię i wesprzyj przy tworzeniu</string>
     <string name="toast_warning_install">Nie będziesz mógł instalować plików APK podczas działania programu Red Moon.</string>
-    <string name="toast_warning_no_location">Włącz usługi lokalizacyjne by znaleźć lokalizację</string>
+    <string name="snackbar_warning_no_location">Włącz usługi lokalizacyjne by znaleźć lokalizację</string>
 
     <string name="help_snackbar_text">Naciśnij przełącznik by włączyć Red Moon</string>
 
-    <string name="add_new_profile_dialog_title">Wpisz nazwę profilu</string>
-    <string name="add_new_profile_edit_hint">Nazwa profilu</string>
-    <string name="remove_profile_dialog_title">Usunąć profil?</string>
+    <string name="add_new_filter_dialog_title">Wpisz nazwę profilu</string>
+    <string name="add_new_filter_edit_hint">Nazwa profilu</string>
+    <string name="remove_filter_dialog_title">Usunąć profil?</string>
     <string name="set_dialog">Ustaw</string>
     <string name="ok_dialog">Dobrze</string>
     <string name="cancel_dialog">Anuluj</string>
@@ -57,7 +58,7 @@
     <string name="time_toggle_options_array_2">Automatyczny (własny)</string>
 
     <string name="intro_label">Wprowadzenie</string>
-    <string name="show_intro_text">Pokaż wprowadzenie</string>
+    <string name="show_intro_text">Powtórz wprowadzenie</string>
     <string name="secure_suspend_activity">Wstrzymuj w chronionych aplikacjach</string>
 
     <string name="resume_action">Wznów</string>
@@ -71,30 +72,30 @@ Red Moon potrzebuje dostępu do użytkowania, żeby zobaczyć czy używasz aplik
     <string name="usage_stats_dialog_title">Dostęp do użytkowania</string>
     <string name="text_switch_on">Włączone</string>
     <string name="text_switch_off">Wyłączone</string>
-    <string name="secure_suspend_summary">Niektóre funkcje nie będą działać gdy Red Moon jest włączony*. Na przykład: instalowanie plików APK, udzielanie uprawnień lub ųzywanie aplikacji SuperUser (na zrootowanych urządzeniach).
+    <string name="secure_suspend_summary">Niektóre funkcje nie będą działać gdy Red Moon jest włączony*. Na przykład: instalowanie plików APK, udzielanie uprawnień lub używanie aplikacji SuperUser (na zrootowanych urządzeniach).
 
-Kiedy to ustawienie jest aktywne, Red Moon zostanie automatycznie wstrzymywany w przypadku, gdy któraś z tych funkcji jest otwarta.
+Kiedy to ustawienie jest aktywne, Red Moon zostanie automatycznie wstrzymywany w przypadku, gdy któraś z tych funkcji zostanie wywołana.
 
 Ta funkcja może w niewielkim stopniu zmniejszyć żywotność baterii twojego telefonu. Dodatkowo może nie działać na wszystkich urządzeniach.
 
-*Red Moon działa rysując przezroczystą czerwoną warstwę nad całym ekranem, te aplikacje nie będą działać, kiedy jakaś inna aplikacja po nich rysuje. W ten sposób, inne aplikacje nie mogą podstępem skłonić Cię do wybrania opcji, której nie chcesz, lub podglądać co wystukujesz na ekranie.</string>
+*Red Moon działa rysując przezroczystą czerwoną warstwę nad całym ekranem; te aplikacje nie będą działać kiedy jakaś inna aplikacja po nich rysuje. W ten sposób, inne aplikacje nie mogą podstępem skłonić Cię do wybrania opcji, której nie chcesz lub podglądać co wystukujesz na ekranie.</string>
     <string name="intro_slide_1_title">Witaj!</string>
     <string name="intro_slide_1_text">Witaj w Red Moon!</string>
 
     <string name="intro_slide_2_title">Ochrona Twoich oczu</string>
     <string name="intro_slide_2_text">W nocy, gdy używasz telefonu,
 ekran niszczy Twój wzrok.
-Możesz użyć Red Moon, żeby przyciemnić Twój ekran.</string>
+Możesz użyć Red Moon, żeby przyciemnić swój ekran.</string>
 
     <string name="intro_slide_3_title">Polepszanie Twojego snu</string>
     <string name="intro_slide_3_text">Niebieskie światło blokuje
 produkcję melaniny, hormonu pomagającego Ci zasnąć w nocy.
 Red Moon usuwa niebieskie światło z Twojego ekranu,
-zapewniając Ci lepszy łatwiejsze zaśnięcie.</string>
+zapewniając Ci łatwiejsze zaśnięcie.</string>
 
     <string name="intro_slide_4_title">Rozpocznij!</string>
-    <string name="intro_slide_4_text">Żeby włączyć Red Moon
-przesuń włącznik w prawym górnym rogu.</string>
+    <string name="intro_slide_4_text">Możesz włączyć lub wyłączyć Red Moona przełącznikiem
+ w prawym górnym rogu.</string>
 
     <string name="overlay_dialog_title">Wyświetlanie nad innymi aplikacjami</string>
     <string name="overlay_dialog_message">Zezwól na wyświetlanie nad innymi aplikacjami, aby Red Moon mógł zacząć działać.</string>
@@ -106,7 +107,32 @@ przesuń włącznik w prawym górnym rogu.</string>
     <string name="off">Wyłączony</string>
     <string name="action_on">Włącz</string>
     <string name="action_off">Wyłącz</string>
-    <string name="action_next_profile">Następny profil</string>
+    <string name="action_next_filter">Następny profil</string>
 
-    <string name="use_location_title">Czas z lokalizacji</string>
+    <string name="pref_summaryoff_use_location">Czas z lokalizacji</string>
+    <string name="menu_about">O programie</string>
+    <string name="activity_about">O Red Moon</string>
+    <string name="pref_title_integration">Integracja z innymi aplikacjami</string>
+    <string name="pref_summary_integration">Niektóre aplikacje, takie jak LibreTasks lub Tasker pozwalają na wywoływanie zadań pod wpływem określonych zdarzeń. Red Moon wysyła publiczne powiadomienie podczas włączania i wyłączania, więc te aplikacje mogą odpowiedzieć. Jeżeli nie używasz lub programujesz tych aplikacji, możesz pominąć następny akapit.
+
+Red Moon rozsyła publiczny zamiar (intent) \'com.jmstudios.redmoon.RED_MOON_TOGGLED\'. Ten zamiar zawiera dodatkową wartość logiczną z kluczem \'jmstudios.bundle.key.FILTER_IS_ON\', która wskazuje czy Red Moon jest włączany, czy wyłączany.</string>
+    <string name="pref_title_version">Wersja</string>
+
+    <!-- Currently unused -->
+    <string name="add_new_profile_dialog_title">Wpisz nazwę profilu</string>
+    <string name="add_new_profile_edit_hint">Nazwa profilu</string>
+    <string name="remove_profile_dialog_title">Usunąć profil?</string>
+    <string name="action_next_profile">Następny profil</string>
+    <string name="pref_title_appearance">Profil</string>
+    <string name="pref_title_button_backlight_disclaimer">Brak efektu na niektórych urządzeniach</string>
+    <string name="pref_title_button_backlight">Podświetlenie przycisków sprzętowych</string>
+
+    <string name="pref_button_backlight_entries_array_0">Zarządzane przez system</string>
+    <string name="pref_button_backlight_entries_array_1">Użyj poziomu filtra przygaszania</string>
+    <string name="pref_button_backlight_entries_array_2">Wyłącz</string>
+
+    <string name="searching_location">Szukanie lokalizacji</string>
+    <string name="toast_warning_no_location">Włącz usługi lokalizacyjne by znaleźć lokalizację</string>
+    <string name="snackbar_location_updated">Ustalono lokalizację!</string>
+    <string name="pref_title_use_location">Czasy Słońca</string>
     </resources>

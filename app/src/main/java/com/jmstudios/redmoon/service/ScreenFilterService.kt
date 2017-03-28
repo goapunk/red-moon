@@ -51,9 +51,7 @@ import com.jmstudios.redmoon.presenter.ScreenFilterPresenter
 import com.jmstudios.redmoon.receiver.OrientationChangeReceiver
 import com.jmstudios.redmoon.view.ScreenFilterView
 import com.jmstudios.redmoon.util.appContext
-import com.jmstudios.redmoon.util.Log
-
-import org.greenrobot.eventbus.EventBus
+import com.jmstudios.redmoon.util.Logger
 
 class ScreenFilterService : Service(), ServiceLifeCycleController {
     enum class Command {
@@ -66,7 +64,7 @@ class ScreenFilterService : Service(), ServiceLifeCycleController {
     override fun onCreate() {
         super.onCreate()
 
-        Log("onCreate")
+        Log.i("onCreate")
 
         // Initialize helpers and managers
         val context = this
@@ -79,7 +77,6 @@ class ScreenFilterService : Service(), ServiceLifeCycleController {
         mPresenter = ScreenFilterPresenter(this, context, wvm, sm)
 
         // Make Presenter listen to settings changes and orientation changes
-        EventBus.getDefault().register(mPresenter)
         if (mOrientationReceiver == null) {
             val orientationIntentFilter = IntentFilter()
             orientationIntentFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
@@ -90,9 +87,9 @@ class ScreenFilterService : Service(), ServiceLifeCycleController {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log(String.format("onStartCommand(%s, %d, %d", intent, flags, startId))
-        val flag = intent.getIntExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, COMMAND_MISSING)
-        Log("Recieved flag: $flag")
+        Log.i(String.format("onStartCommand(%s, %d, %d", intent, flags, startId))
+        val flag = intent.getIntExtra(BUNDLE_KEY_COMMAND, COMMAND_MISSING)
+        Log.i("Recieved flag: $flag")
         if (flag != COMMAND_MISSING) mPresenter.onScreenFilterCommand(Command.values()[flag])
 
         // Do not attempt to restart if the hosting process is killed by Android
@@ -105,11 +102,10 @@ class ScreenFilterService : Service(), ServiceLifeCycleController {
     }
 
     override fun onDestroy() {
-        Log("onDestroy")
+        Log.i("onDestroy")
 
         // TODO: make sure the filterView gets closed. Not a problem right now
         // but without it this is brittle and bug-prone
-        EventBus.getDefault().unregister(mPresenter)
         unregisterReceiver(mOrientationReceiver)
         mOrientationReceiver = null
         mPresenter.updateWidgets()
@@ -117,19 +113,19 @@ class ScreenFilterService : Service(), ServiceLifeCycleController {
         super.onDestroy()
     }
 
-    companion object {
+    companion object : Logger() {
         private const val BUNDLE_KEY_COMMAND = "jmstudios.bundle.key.COMMAND"
         private const val COMMAND_MISSING = -1
 
-        private val intent: Intent
+        private val emptyIntent: Intent
             get() = Intent(appContext, ScreenFilterService::class.java)
 
-        val command = { c: Command -> intent.putExtra(BUNDLE_KEY_COMMAND, c.ordinal) }
+        fun intent(c: Command): Intent = emptyIntent.putExtra(BUNDLE_KEY_COMMAND, c.ordinal)
 
-        fun start()  { appContext.startService(intent) }
+        fun start()  { appContext.startService(emptyIntent) }
         //fun stop()   { appContext.stopService(intent)  }
 
         fun toggle() { moveToState(Command.TOGGLE)  }
-        fun moveToState(c: Command) { appContext.startService(command(c)) }
+        fun moveToState(c: Command) { appContext.startService(intent(c)) }
     }
 }

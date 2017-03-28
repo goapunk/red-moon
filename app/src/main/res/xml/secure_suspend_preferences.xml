@@ -22,7 +22,7 @@
         android:layout="@layout/switch_bar"
         android:defaultValue="false" />
     <Preference
-        android:layout="@layout/secure_suspend_summary"
+        android:layout="@layout/preference_summary"
         android:summary="@string/secure_suspend_summary"
         android:selectable="false" />
 </PreferenceScreen>

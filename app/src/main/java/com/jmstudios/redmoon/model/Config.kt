@@ -40,11 +40,14 @@ import android.preference.PreferenceManager
 
 import com.jmstudios.redmoon.R
 
-import com.jmstudios.redmoon.fragment.TimeToggleFragment
 import com.jmstudios.redmoon.preference.ColorSeekBarPreference
 import com.jmstudios.redmoon.preference.DimSeekBarPreference
 import com.jmstudios.redmoon.preference.IntensitySeekBarPreference
-import com.jmstudios.redmoon.util.appContext
+import com.jmstudios.redmoon.util.*
+
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator
+import java.util.Calendar
+import java.util.TimeZone
 
 /**
  * This singleton provides allows easy access to the shared preferences
@@ -53,27 +56,35 @@ object Config {
     private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(appContext)
 
     private fun getBooleanPref(resId: Int, default: Boolean): Boolean {
-        return sharedPrefs.getBoolean(appContext.getString(resId), default)
+        return sharedPrefs.getBoolean(getString(resId), default)
     }
 
     private fun putBooleanPref(resId: Int, v: Boolean) {
-        sharedPrefs.edit().putBoolean(appContext.getString(resId), v).apply()
+        sharedPrefs.edit().putBoolean(getString(resId), v).apply()
     }
 
     private fun getIntPref(resId: Int, default: Int): Int {
-        return sharedPrefs.getInt(appContext.getString(resId), default)
+        return sharedPrefs.getInt(getString(resId), default)
     }
 
     private fun putIntPref(resId: Int, v: Int) {
-        sharedPrefs.edit().putInt(appContext.getString(resId), v).apply()
+        sharedPrefs.edit().putInt(getString(resId), v).apply()
+    }
+
+    private fun getLongPref(resId: Int, default: Long): Long {
+        return sharedPrefs.getLong(getString(resId), default)
+    }
+
+    private fun putLongPref(resId: Int, v: Long) {
+        sharedPrefs.edit().putLong(getString(resId), v).apply()
     }
 
     private fun getStringPref(resId: Int, default: String): String {
-        return sharedPrefs.getString(appContext.getString(resId), default)
+        return sharedPrefs.getString(getString(resId), default)
     }
 
     private fun putStringPref(resId: Int, v: String) {
-        sharedPrefs.edit().putString(appContext.getString(resId), v).apply()
+        sharedPrefs.edit().putString(getString(resId), v).apply()
     }
 
     //region preferences
@@ -108,14 +119,16 @@ object Config {
     val secureSuspend: Boolean
         get() = getBooleanPref(R.string.pref_key_secure_suspend, false)
 
-    val dimButtons: Boolean
-        get() = getBooleanPref(R.string.pref_key_dim_buttons, true)
+    val buttonBacklightFlag: String
+        get() = getStringPref(R.string.pref_key_button_backlight, "off")
     
-    private val darkThemeFlag: Boolean
-        get() = getBooleanPref(R.string.pref_key_dark_theme, false)
+    var darkThemeFlag: Boolean
+        get()     = getBooleanPref(R.string.pref_key_dark_theme, false)
+        set(flag) = putBooleanPref(R.string.pref_key_dark_theme, flag)
 
-    val timeToggle: Boolean
+    var timeToggle: Boolean
         get() = getBooleanPref(R.string.pref_key_time_toggle, false)
+        set(t) = putBooleanPref(R.string.pref_key_time_toggle, t)
 
     val customTurnOnTime: String
         get() = getStringPref(R.string.pref_key_custom_turn_on_time, "22:00")
@@ -123,21 +136,21 @@ object Config {
     val customTurnOffTime: String
         get() = getStringPref(R.string.pref_key_custom_turn_off_time, "06:00")
 
-    val useLocation: Boolean
+    var useLocation: Boolean
         get() = getBooleanPref(R.string.pref_key_use_location, false)
-
-    var sunsetTime: String
-        get()  = getStringPref(R.string.pref_key_sunset_time, "19:30")
-        set(t) = putStringPref(R.string.pref_key_sunset_time, t)
-
-    var sunriseTime: String
-        get()  = getStringPref(R.string.pref_key_sunrise_time, "06:30")
-        set(t) = putStringPref(R.string.pref_key_sunrise_time, t)
+        set(t) = putBooleanPref(R.string.pref_key_use_location, t)
     //endregion
 
     //region state
     val activeTheme: Int
         get() = if (darkThemeFlag) { R.style.AppThemeDark } else { R.style.AppTheme }
+
+    val buttonBacklightLevel: Float
+        get() = when (buttonBacklightFlag) {
+                    "system" -> -1.toFloat()
+                    "dim" -> 1 - (dim.toFloat() / 100)
+                    else -> 0.toFloat()
+                }
 
     val automaticTurnOnTime: String
         get() = if (useLocation) sunsetTime else customTurnOnTime
@@ -145,9 +158,47 @@ object Config {
     val automaticTurnOffTime: String
         get() = if (useLocation) sunriseTime else customTurnOffTime
     
-    var location: String
-        get()  = getStringPref(R.string.pref_key_location, TimeToggleFragment.DEFAULT_LOCATION)
-        set(l) = putStringPref(R.string.pref_key_location, l)
+    const val DEFAULT_LOCATION = "0,0"
+    const val NOT_SET: Long = -1
+    var location: Triple<String, String, Long?>
+        get() {
+            val l = getStringPref(R.string.pref_key_location, DEFAULT_LOCATION)
+            val latitude  = l.substringBefore(',')
+            val longitude = l.substringAfter(',')
+            val t = getLongPref(R.string.pref_key_location_timestamp, NOT_SET)
+            val timestamp = if (t == NOT_SET) null else t
+            return Triple(latitude, longitude, timestamp)
+        }
+        set(l) {
+            putLongPref(R.string.pref_key_location_timestamp, l.third ?: NOT_SET)
+            putStringPref(R.string.pref_key_location, l.first + "," + l.second)
+        }
+
+    const val DEFAULT_SUNSET = "19:30"
+    val sunsetTime: String
+        get() {
+            val (latitude, longitude, time) = location
+            return if (time == null) {
+                DEFAULT_SUNSET
+            } else {
+                val sunLocation = com.luckycatlabs.sunrisesunset.dto.Location(latitude, longitude)
+                val calculator  = SunriseSunsetCalculator(sunLocation, TimeZone.getDefault())
+                calculator.getOfficialSunsetForDate(Calendar.getInstance())
+            }
+        }
+
+    const val DEFAULT_SUNRISE = "06:30"
+    val sunriseTime: String
+        get() {
+            val (latitude, longitude, time) = location
+            return if (time == null) {
+                DEFAULT_SUNRISE
+            } else {
+                val sunLocation = com.luckycatlabs.sunrisesunset.dto.Location(latitude, longitude)
+                val calculator  = SunriseSunsetCalculator(sunLocation, TimeZone.getDefault())
+                calculator.getOfficialSunriseForDate(Calendar.getInstance())
+            }
+        }
 
     var introShown: Boolean
         get()  = getBooleanPref(R.string.pref_key_intro_shown, false)
@@ -160,5 +211,11 @@ object Config {
     var automaticBrightness: Boolean
         get()  = getBooleanPref(R.string.pref_key_automatic_brightness, true)
         set(a) = putBooleanPref(R.string.pref_key_automatic_brightness, a)
+    //endregion
+
+    //region application
+    var fromVersionCode: Int
+        get() = getIntPref(R.string.pref_key_from_version_code, 0)
+        set(c) = putIntPref(R.string.pref_key_from_version_code, c)
     //endregion
 }
