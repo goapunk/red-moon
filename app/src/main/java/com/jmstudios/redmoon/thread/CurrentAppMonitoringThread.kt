@@ -64,7 +64,8 @@ class CurrentAppMonitoringThread(private val mContext: Context) : Thread() {
                 app == "com.koushikdutta.superuser" ||
                 app == "me.phh.superuser" ||
                 app == "com.owncloud.android" ||
-                app == "com.google.android.packageinstaller"
+                app == "com.google.android.packageinstaller" ||
+                app == "org.briarproject.briar"
     }
 
     companion object : Logger(false) {
